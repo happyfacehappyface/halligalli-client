@@ -6,7 +6,6 @@ using TMPro;
 
 public class PlayerComponent : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI _nameText;
     [SerializeField] private TextMeshProUGUI _handCardCountText;
     [SerializeField] private TextMeshProUGUI _showCardCountText;
     [SerializeField] private FruitCardItemComponent _topCardItem;
@@ -23,7 +22,6 @@ public class PlayerComponent : MonoBehaviour
 
     public void UpdatePlayer()
     {
-        _nameText.text = _player.Name;
         _handCardCountText.text = _player.DeckCardCount.ToString();
         _showCardCountText.text = _player.ShowCardCount.ToString();
 
@@ -52,7 +50,6 @@ public class PlayerComponent : MonoBehaviour
 
     public void UpdateWithFlipCard()
     {
-        _nameText.text = _player.Name;
         _handCardCountText.text = _player.DeckCardCount.ToString();
         _showCardCountText.text = _player.ShowCardCount.ToString();
 

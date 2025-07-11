@@ -9,14 +9,16 @@ public class GamePlayer
     public int ShowCardCount;
     public FruitCard ShowTopCard;
     public FruitCard ShowSecondCard;
+    public int ColorCode;
 
-    public GamePlayer(string name, int handCardCount)
+    public GamePlayer(string name, int handCardCount, int colorCode)
     {
         Name = name;
         DeckCardCount = handCardCount;
         ShowCardCount = 0;
         ShowTopCard = null;
         ShowSecondCard = null;
+        ColorCode = colorCode;
     }
 
     public void ChangeTopCard(FruitCard card)

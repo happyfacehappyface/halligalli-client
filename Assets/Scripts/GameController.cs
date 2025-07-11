@@ -34,16 +34,20 @@ public class GameController : MonoBehaviour
         
         _players = new GamePlayer[]
         {
-            new GamePlayer("Player", 10),
-            new GamePlayer("Player2", 10),
-            new GamePlayer("Player3", 10),
-            new GamePlayer("Player4", 10),
+            new GamePlayer("Player1", 10, 0),
+            new GamePlayer("Player2", 10, 1),
+            new GamePlayer("Player3", 10, 2),
+            new GamePlayer("Player4", 10, 3),
+            new GamePlayer("Player5", 10, 3),
+            new GamePlayer("Player6", 10, 3),
+            new GamePlayer("Player7", 10, 3),
+            new GamePlayer("Player8", 10, 3),
         };
 
         _gameDrawer.OnStartGame(_players, _myPlayerIndex);
 
         _myPlayerIndex = 0;
-        _totalPlayerCount = 4;
+        _totalPlayerCount = 8;
 
         StartCoroutine(CO_ShowRandomCard());
     }
@@ -65,9 +69,11 @@ public class GameController : MonoBehaviour
         return _players[index];
     }
 
-    private void OnResponseBellRing()
+    private void OnResponseBellRing(int playerIndex)
     {
-        SoundManager.Instance.PlaySfxBell();
+        SoundManager.Instance.PlaySfxBell(0f);
+        
+        _gameDrawer.OnBellRing(playerIndex, _players[playerIndex].ColorCode);
     }
 
     private void OnResponseShowCard(int playerIndex, FruitCard showedCard)
@@ -88,7 +94,7 @@ public class GameController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            OnResponseBellRing();
+            OnResponseBellRing(_myPlayerIndex);
         }
     }
 

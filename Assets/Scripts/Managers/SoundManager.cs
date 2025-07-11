@@ -36,14 +36,21 @@ public class SoundManager : MonoBehaviour
     }
 
 
-    public void PlaySfxBell() => PlayRandomSfx(_sfxBellRing);
+    public void PlaySfxBell(float delay) => PlayRandomSfx(_sfxBellRing, delay);
 
-    private void PlayRandomSfx(AudioClip[] clips)
+    private void PlayRandomSfx(AudioClip[] clips, float delay)
     {
         if (clips != null && clips.Length > 0)
         {
             int randomIndex = Random.Range(0, clips.Length);
-            PlaySfx(clips[randomIndex]);
+            if (delay <= 0f)
+            {
+                PlaySfx(clips[randomIndex]);
+            }
+            else
+            {
+                StartCoroutine(CO_PlaySfxWithDelay(clips[randomIndex], delay));
+            }
         }
     }
 
@@ -53,5 +60,11 @@ public class SoundManager : MonoBehaviour
         {
             _sfxSource.PlayOneShot(clip);
         }
+    }
+
+    private IEnumerator CO_PlaySfxWithDelay(AudioClip clip, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        PlaySfx(clip);
     }
 }

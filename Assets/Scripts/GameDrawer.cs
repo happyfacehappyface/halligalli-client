@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameDrawer : MonoBehaviour
 {
@@ -10,10 +11,15 @@ public class GameDrawer : MonoBehaviour
     [SerializeField] private GameObject _playerItemPrefab;
     [SerializeField] private Transform _playerItemParent;
 
+    [SerializeField] private GameObject _portraitPrefab;
+    [SerializeField] private Transform _portraitParent;
+
     
     [SerializeField] private Transform _handTransform;
     [SerializeField] private Animator _handAnimator;
+    [SerializeField] private Image[] _handImages;
     private PlayerComponent[] _playerComponents;
+    private PortraitComponent[] _portraitComponents;
 
     public void ManualStart(GameController controller)
     {
@@ -25,11 +31,15 @@ public class GameDrawer : MonoBehaviour
         ClearPlayerItems();
 
         _playerComponents = new PlayerComponent[players.Length];
+        _portraitComponents = new PortraitComponent[players.Length];
 
         for (var i = 0; i < players.Length; i++)
         {
             _playerComponents[i] = Instantiate(_playerItemPrefab, _playerItemParent).GetComponent<PlayerComponent>();
             _playerComponents[i].ManualStart(players[i]);
+
+            _portraitComponents[i] = Instantiate(_portraitPrefab, _portraitParent).GetComponent<PortraitComponent>();
+            _portraitComponents[i].ManualStart(players[i]);
         }
 
         
@@ -43,6 +53,19 @@ public class GameDrawer : MonoBehaviour
     public void OnPlayerUpdated(int playerIndex)
     {
         _playerComponents[playerIndex].UpdatePlayer();
+        _portraitComponents[playerIndex].UpdateCardLeft();
+    }
+
+    public void OnBellRing(int playerIndex, int colorCode)
+    {
+        _handTransform.localRotation = Quaternion.Euler(0, 0, GetPlayerAngle(playerIndex));
+
+        foreach (var handImage in _handImages)
+        {
+            handImage.color = AssetHolder.Instance.GetCharacterColor(colorCode);
+        }
+
+        _handAnimator.SetTrigger("HandUp");
     }
 
     public void OnPlayerUpdatedWithFlipCard(int playerIndex)
@@ -56,12 +79,30 @@ public class GameDrawer : MonoBehaviour
         {
             _playerComponents[i].transform.localRotation = Quaternion.Euler(0, 0, GetPlayerAngle(i));
         }
+
+        for (var i = 0; i < _portraitComponents.Length; i++)
+        {
+            float angle = GetPlayerAngle(i);
+            float radius = 570f;
+            
+            float angleInRadians = angle * Mathf.Deg2Rad;
+            float x = Mathf.Sin(angleInRadians) * radius;
+            float y = -Mathf.Cos(angleInRadians) * radius;
+            
+            _portraitComponents[i].transform.localPosition = new Vector3(x, y, 1f);
+            _portraitComponents[i].AdjustAngle(angle);
+        }
     }
 
 
     private void ClearPlayerItems()
     {
         foreach (Transform child in _playerItemParent)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach (Transform child in _portraitParent)
         {
             Destroy(child.gameObject);
         }
