@@ -6,22 +6,19 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] private AssetHolder _assetHolder;
     [SerializeField] private GameDrawer _gameDrawer;
 
-    public AssetHolder AssetHolder => _assetHolder;
 
     private TimeSpan _currentTime;
     public TimeSpan CurrentTime => _currentTime;
 
-    private GamePlayer _myPlayer;
-    public GamePlayer MyPlayer => _myPlayer;
-    private GamePlayer[] _otherPlayers;
-    public GamePlayer[] OtherPlayers => _otherPlayers;
+    private GamePlayer[] _players;
+    public GamePlayer[] Players => _players;
 
 
     
-
+    private int _myPlayerIndex;
+    private int _totalPlayerCount;
 
     private void ManualStart()
     {
@@ -32,15 +29,38 @@ public class GameController : MonoBehaviour
 
     private void OnStartGame()
     {
-        _myPlayer = new GamePlayer("Player", 10);
-        _otherPlayers = new GamePlayer[]
+        
+        _players = new GamePlayer[]
         {
+            new GamePlayer("Player", 10),
             new GamePlayer("Player2", 10),
             new GamePlayer("Player3", 10),
             new GamePlayer("Player4", 10),
         };
 
-        _gameDrawer.OnStartGame(3);
+        _gameDrawer.OnStartGame(_players, _myPlayerIndex);
+
+        _myPlayerIndex = 0;
+        _totalPlayerCount = 4;
+
+        StartCoroutine(CO_ShowRandomCard());
+    }
+
+    private IEnumerator CO_ShowRandomCard()
+    {
+        int playerIndex = 0;
+
+        while (true)
+        {
+            yield return new WaitForSeconds(1f);
+            OnResponseShowCard(playerIndex, Utils.GetRandomFruitCard());
+            playerIndex = Utils.RealModulo((playerIndex + 1), _totalPlayerCount);
+        }
+    }
+
+    private GamePlayer GetPlayer(int index)
+    {
+        return _players[index];
     }
 
     private void OnResponseBellRing()
@@ -48,9 +68,17 @@ public class GameController : MonoBehaviour
         SoundManager.Instance.PlaySfxBell();
     }
 
+    private void OnResponseShowCard(int playerIndex, FruitCard showedCard)
+    {
+        _players[playerIndex].ShowTopCard = showedCard;
+        _players[playerIndex].ShowCardCount++;
+        _players[playerIndex].HandCardCount--;
+        _gameDrawer.OnPlayerUpdated(playerIndex);
+    }
+
     private void ManualUpdate()
     {
-        _currentTime = _currentTime + TimeSpan.FromSeconds(Time.deltaTime);
+        _currentTime += TimeSpan.FromSeconds(Time.deltaTime);
 
     
         HandleInput();

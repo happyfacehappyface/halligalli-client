@@ -16,4 +16,5 @@ public class GamePlayer
         ShowCardCount = 0;
         ShowTopCard = null;
     }
+
 }

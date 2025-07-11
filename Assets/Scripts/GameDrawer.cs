@@ -5,40 +5,65 @@ using UnityEngine;
 public class GameDrawer : MonoBehaviour
 {
     private GameController _controller;
+    private int _myPlayerIndex;
+    private int _playerCount;
     [SerializeField] private GameObject _playerItemPrefab;
     [SerializeField] private Transform _playerItemParent;
-    private PlayerComponent _myPlayerComponent;
-    private PlayerComponent[] _opponentPlayerComponent;
+    private PlayerComponent[] _playerComponents;
 
     public void ManualStart(GameController controller)
     {
         _controller = controller;
     }
 
-    public void OnStartGame(int opponentCount)
+    public void OnStartGame(GamePlayer[] players, int myPlayerIndex)
     {
         ClearPlayerItems();
 
-        _myPlayerComponent = Instantiate(_playerItemPrefab, _playerItemParent).GetComponent<PlayerComponent>();
+        _playerComponents = new PlayerComponent[players.Length];
 
-        List<PlayerComponent> opponents = new List<PlayerComponent>();
-        for (var i = 0; i < opponentCount; i++)
+        for (var i = 0; i < players.Length; i++)
         {
-            opponents.Add(Instantiate(_playerItemPrefab, _playerItemParent).GetComponent<PlayerComponent>());
+            _playerComponents[i] = Instantiate(_playerItemPrefab, _playerItemParent).GetComponent<PlayerComponent>();
+            _playerComponents[i].ManualStart(players[i]);
         }
 
-        _opponentPlayerComponent = opponents.ToArray();
+        
+
+        _myPlayerIndex = myPlayerIndex;
+        _playerCount = players.Length;
 
         AdjustPlayerAngle();
     }
 
+    public void OnPlayerUpdated(int playerIndex)
+    {
+        _playerComponents[playerIndex].UpdatePlayer();
+    }
+
     private void AdjustPlayerAngle()
     {
-        _myPlayerComponent.transform.localRotation = Quaternion.identity;
+        for (var i = 0; i < _playerComponents.Length; i++)
+        {
+            _playerComponents[i].transform.localRotation = Quaternion.Euler(0, 0, GetPlayerAngle(i));
+        }
+    }
 
-        int opponentCount = _opponentPlayerComponent.Length;
-        float angleStart;
-        float angleStep;
+
+    private void ClearPlayerItems()
+    {
+        foreach (Transform child in _playerItemParent)
+        {
+            Destroy(child.gameObject);
+        }
+
+        _playerComponents = new PlayerComponent[0];
+    }
+
+    public float GetPlayerAngle(int playerIndex)
+    {
+        int opponentCount = _playerCount - 1;
+        float angleStart, angleStep;
 
         if (opponentCount == 1)
         {
@@ -56,19 +81,15 @@ public class GameDrawer : MonoBehaviour
             angleStep = 180 * (1f / (float)(opponentCount - 1));
         }
 
-        for (var i = 0; i < opponentCount; i++)
-        { 
-            _opponentPlayerComponent[i].transform.localRotation = Quaternion.Euler(0, 0, angleStart + (i * angleStep));
-
-        }
-    }
-
-
-    private void ClearPlayerItems()
-    {
-        foreach (Transform child in _playerItemParent)
+        if (playerIndex == _myPlayerIndex)
         {
-            Destroy(child.gameObject);
+            return 0f;
+        }
+        else
+        {
+            Utils.Log($"GetPlayerAngle: {playerIndex}, {_myPlayerIndex}, {opponentCount}");
+            int indexDelta = Utils.RealModulo((playerIndex - _myPlayerIndex - 1), opponentCount);
+            return angleStart + (indexDelta * angleStep);
         }
     }
 

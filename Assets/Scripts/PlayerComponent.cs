@@ -19,7 +19,7 @@ public class PlayerComponent : MonoBehaviour
         UpdatePlayer();
     }
 
-    private void UpdatePlayer()
+    public void UpdatePlayer()
     {
         _nameText.text = _player.Name;
         _handCardCountText.text = _player.HandCardCount.ToString();
