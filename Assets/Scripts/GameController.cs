@@ -15,6 +15,8 @@ public class GameController : MonoBehaviour
     private GamePlayer[] _players;
     public GamePlayer[] Players => _players;
 
+    
+
 
     
     private int _myPlayerIndex;
@@ -70,10 +72,8 @@ public class GameController : MonoBehaviour
 
     private void OnResponseShowCard(int playerIndex, FruitCard showedCard)
     {
-        _players[playerIndex].ShowTopCard = showedCard;
-        _players[playerIndex].ShowCardCount++;
-        _players[playerIndex].HandCardCount--;
-        _gameDrawer.OnPlayerUpdated(playerIndex);
+        _players[playerIndex].ChangeTopCard(showedCard);
+        _gameDrawer.OnPlayerUpdatedWithFlipCard(playerIndex);
     }
 
     private void ManualUpdate()

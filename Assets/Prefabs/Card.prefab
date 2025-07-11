@@ -85,6 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5446948679265646066}
   - component: {fileID: 1271889791127211909}
+  - component: {fileID: 8923016123747382732}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -125,12 +126,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _card: {fileID: 3705141285975208633}
-  _cardBack: {fileID: 1739495957031414841}
+  _cardAnimator: {fileID: 8923016123747382732}
   _fruitCenter: {fileID: 405369500273780444}
   _fruitImageTopLeft: {fileID: 7063554555231108249}
   _fruitImageTopRight: {fileID: 1097258880702237297}
   _fruitImageBottomLeft: {fileID: 4345696687590044788}
   _fruitImageBottomRight: {fileID: 232817010244071158}
+--- !u!95 &8923016123747382732
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558973465959781318}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e1a8290242e54c64e8ee53e3a823cc89, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1739495957031414841
 GameObject:
   m_ObjectHideFlags: 0

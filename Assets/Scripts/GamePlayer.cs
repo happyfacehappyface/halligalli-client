@@ -5,16 +5,29 @@ using UnityEngine;
 public class GamePlayer
 {
     public string Name;
-    public int HandCardCount;
+    public int DeckCardCount;
     public int ShowCardCount;
     public FruitCard ShowTopCard;
+    public FruitCard ShowSecondCard;
 
     public GamePlayer(string name, int handCardCount)
     {
         Name = name;
-        HandCardCount = handCardCount;
+        DeckCardCount = handCardCount;
         ShowCardCount = 0;
         ShowTopCard = null;
+        ShowSecondCard = null;
+    }
+
+    public void ChangeTopCard(FruitCard card)
+    {
+        
+        ShowSecondCard = ShowTopCard;
+        ShowTopCard = card;
+
+        ShowCardCount++;
+        DeckCardCount--;
+
     }
 
 }

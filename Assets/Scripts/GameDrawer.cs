@@ -9,6 +9,10 @@ public class GameDrawer : MonoBehaviour
     private int _playerCount;
     [SerializeField] private GameObject _playerItemPrefab;
     [SerializeField] private Transform _playerItemParent;
+
+    
+    [SerializeField] private Transform _handTransform;
+    [SerializeField] private Animator _handAnimator;
     private PlayerComponent[] _playerComponents;
 
     public void ManualStart(GameController controller)
@@ -39,6 +43,11 @@ public class GameDrawer : MonoBehaviour
     public void OnPlayerUpdated(int playerIndex)
     {
         _playerComponents[playerIndex].UpdatePlayer();
+    }
+
+    public void OnPlayerUpdatedWithFlipCard(int playerIndex)
+    {
+        _playerComponents[playerIndex].UpdateWithFlipCard();
     }
 
     private void AdjustPlayerAngle()
@@ -87,7 +96,6 @@ public class GameDrawer : MonoBehaviour
         }
         else
         {
-            Utils.Log($"GetPlayerAngle: {playerIndex}, {_myPlayerIndex}, {opponentCount}");
             int indexDelta = Utils.RealModulo((playerIndex - _myPlayerIndex - 1), opponentCount);
             return angleStart + (indexDelta * angleStep);
         }

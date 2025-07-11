@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class FruitCardItemComponent : MonoBehaviour
 {
     [SerializeField] private GameObject _card;
-    [SerializeField] private GameObject _cardBack;
+    [SerializeField] private Animator _cardAnimator;
     [SerializeField] private Image _fruitCenter;
     [SerializeField] private Image _fruitImageTopLeft;
     [SerializeField] private Image _fruitImageTopRight;
@@ -22,34 +22,61 @@ public class FruitCardItemComponent : MonoBehaviour
         _controller = controller;
     }
 
-    public void UpdateFruitCard(FruitCard fruitCard, bool isFaceUp)
+    public void AnimateFaceUp()
     {
-        if (fruitCard == null)
-        {
-            _card.SetActive(false);
-            return;
-        }
+        _cardAnimator.SetTrigger("FaceUp");
+    }
 
-        _card.SetActive(true);
+    public void AnimateFaceDown()
+    {
 
-        _cardBack.SetActive(!isFaceUp);
+    }
 
-        Utils.Log($"FruitCardItemComponent.UpdateFruitCard: {fruitCard.FruitID}, {fruitCard.Count}");
+    public void AnimateFlip()
+    {
+        _cardAnimator.SetTrigger("Flip");
+    }
 
-        _fruitCenter.sprite = AssetHolder.Instance.GetFruitSprite(fruitCard.FruitID);
-        _fruitImageTopLeft.sprite = AssetHolder.Instance.GetFruitSprite(fruitCard.FruitID);
-        _fruitImageTopRight.sprite = AssetHolder.Instance.GetFruitSprite(fruitCard.FruitID);
-        _fruitImageBottomLeft.sprite = AssetHolder.Instance.GetFruitSprite(fruitCard.FruitID);
-        _fruitImageBottomRight.sprite = AssetHolder.Instance.GetFruitSprite(fruitCard.FruitID);
-        
-        _fruitCenter.gameObject.SetActive(new int[] {1, 3, 5}.Contains(fruitCard.Count));
-        _fruitImageTopLeft.gameObject.SetActive(new int[] {2, 3, 4, 5}.Contains(fruitCard.Count));
-        _fruitImageTopRight.gameObject.SetActive(new int[] {4, 5}.Contains(fruitCard.Count));
-        _fruitImageBottomLeft.gameObject.SetActive(new int[] {4, 5}.Contains(fruitCard.Count));
-        _fruitImageBottomRight.gameObject.SetActive(new int[] {2, 3, 4, 5}.Contains(fruitCard.Count));
+    public void UpdateFaceUp(FruitCard fruitCard)
+    {
+        SetFruit(fruitCard.FruitID, fruitCard.Count);
 
+        AnimateFaceUp();
+    }
 
+    public void UpdateFaceDown()
+    {
+        AnimateFaceDown();
+    }
 
+    public void UpdateFlip(FruitCard fruitCard)
+    {
+        SetFruit(fruitCard.FruitID, fruitCard.Count);
+        AnimateFlip();
+    }
+
+    private void SetFruitType(int fruitID)
+    {
+        _fruitCenter.sprite = AssetHolder.Instance.GetFruitSprite(fruitID);
+        _fruitImageTopLeft.sprite = AssetHolder.Instance.GetFruitSprite(fruitID);
+        _fruitImageTopRight.sprite = AssetHolder.Instance.GetFruitSprite(fruitID);
+        _fruitImageBottomLeft.sprite = AssetHolder.Instance.GetFruitSprite(fruitID);
+        _fruitImageBottomRight.sprite = AssetHolder.Instance.GetFruitSprite(fruitID);
+    }
+
+    private void SetFruitCount(int count)
+    {
+        _fruitCenter.gameObject.SetActive(new int[] {1, 3, 5}.Contains(count));
+        _fruitImageTopLeft.gameObject.SetActive(new int[] {2, 3, 4, 5}.Contains(count));
+        _fruitImageTopRight.gameObject.SetActive(new int[] {4, 5}.Contains(count));
+        _fruitImageBottomLeft.gameObject.SetActive(new int[] {4, 5}.Contains(count));
+        _fruitImageBottomRight.gameObject.SetActive(new int[] {2, 3, 4, 5}.Contains(count));
+    }
+
+    private void SetFruit(int fruitID, int count)
+    {
+        SetFruitType(fruitID);
+        SetFruitCount(count);
     }
 
     
