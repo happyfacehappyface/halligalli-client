@@ -69,10 +69,32 @@ public class GameController : MonoBehaviour
         return _players[index];
     }
 
-    private void OnResponseBellRing(int playerIndex)
+    private void OnResponseCorrectBellRing(int playerIndex)
+    {
+        OnBellRing(playerIndex);
+
+        int totalOpenedCardCount = 0;
+
+        for (var i = 0; i < _players.Length; i++)
+        {
+            totalOpenedCardCount += _players[i].ShowCardCount;
+            _players[i].ResetShowCard();
+        }
+
+        _players[playerIndex].DeckCardCount += totalOpenedCardCount;
+
+        _gameDrawer.OnPlayersUpdated();
+
+    }
+
+    private void OnResponseInCorrectBellRing(int playerIndex)
+    {
+        OnBellRing(playerIndex);
+    }
+
+    private void OnBellRing(int playerIndex)
     {
         SoundManager.Instance.PlaySfxBell(0f);
-        
         _gameDrawer.OnBellRing(playerIndex, _players[playerIndex].ColorCode);
     }
 
@@ -81,6 +103,8 @@ public class GameController : MonoBehaviour
         _players[playerIndex].ChangeTopCard(showedCard);
         _gameDrawer.OnPlayerUpdatedWithFlipCard(playerIndex);
     }
+
+    
 
     private void ManualUpdate()
     {
@@ -94,8 +118,17 @@ public class GameController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            OnResponseBellRing(_myPlayerIndex);
+            OnClickBell();
         }
+        else if (Input.GetKeyDown(KeyCode.B))
+        {
+            OnResponseInCorrectBellRing(_myPlayerIndex);
+        }
+    }
+
+    public void OnClickBell()
+    {
+        OnResponseCorrectBellRing(_myPlayerIndex);
     }
 
     protected void Start()

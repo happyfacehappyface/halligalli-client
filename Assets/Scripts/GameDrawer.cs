@@ -56,6 +56,15 @@ public class GameDrawer : MonoBehaviour
         _portraitComponents[playerIndex].UpdateCardLeft();
     }
 
+    public void OnPlayersUpdated()
+    {
+        for (var i = 0; i < _playerComponents.Length; i++)
+        {
+            _playerComponents[i].UpdatePlayer();
+            _portraitComponents[i].UpdateCardLeft();
+        }
+    }
+
     public void OnBellRing(int playerIndex, int colorCode)
     {
         _handTransform.localRotation = Quaternion.Euler(0, 0, GetPlayerAngle(playerIndex));

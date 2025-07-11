@@ -32,4 +32,11 @@ public class GamePlayer
 
     }
 
+    public void ResetShowCard()
+    {
+        ShowCardCount = 0;
+        ShowTopCard = null;
+        ShowSecondCard = null;
+    }
+
 }
