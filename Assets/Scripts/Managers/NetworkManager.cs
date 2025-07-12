@@ -202,6 +202,14 @@ public class NetworkManager : MonoBehaviour
             }
         },
 
+        {
+            typeof(ResponsePacketData.EndGame),
+            (isSuccess, data) => {
+                Utils.Log("EndGame");
+                FindObjectOfType<GameController>()?.OnResponseEndGame(isSuccess, (ResponsePacketData.EndGame)data);
+            }
+        },
+
         /*
         {
             typeof(ResponsePacketData.Login),
@@ -378,6 +386,7 @@ public class NetworkManager : MonoBehaviour
         { 2000, typeof(ResponsePacketData.OpenCard) },
         { 2002, typeof(ResponsePacketData.RingBellCorrect) },
         { 2003, typeof(ResponsePacketData.RingBellWrong) },
+        { 3000, typeof(ResponsePacketData.EndGame) },
 
         /*
         { 1000, typeof(ResponsePacketData.Login) },
@@ -552,6 +561,8 @@ public abstract record ResponsePacketData
     public sealed record OpenCard(int fruitIndex, int fruitCount, int playerIndex) : ResponsePacketData;
     public sealed record RingBellCorrect(int playerIndex, int[] playerCards) : ResponsePacketData;
     public sealed record RingBellWrong(int playerIndex, bool[] cardGivenTo, int[] playerCards) : ResponsePacketData;
+
+    public sealed record EndGame(int[] playerCards, int[] playerRanks) : ResponsePacketData;
 
 }
 

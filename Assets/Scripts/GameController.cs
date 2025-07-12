@@ -7,6 +7,9 @@ public class GameController : MonoBehaviour
 {
     [SerializeField] private GameDrawer _gameDrawer;
 
+    [SerializeField] private RankHandler _rankHandler;
+
+    private InGameState _gameState;
 
     private TimeSpan _currentTime;
     public TimeSpan CurrentTime => _currentTime;
@@ -26,6 +29,7 @@ public class GameController : MonoBehaviour
     public void ManualStart(ResponsePacketData.StartGame data)
     {
         _currentTime = TimeSpan.Zero;
+        _gameState = InGameState.BeforeStart;
         _gameDrawer.ManualStart(this);
         //OnStartGame(data);
         _startGameData = data;
@@ -38,6 +42,7 @@ public class GameController : MonoBehaviour
     {
         _myPlayerIndex = data.myIndex;
         _totalPlayerCount = data.playerCount;
+        _gameState = InGameState.Playing;
 
         _players = new GamePlayer[_totalPlayerCount];
 
@@ -100,6 +105,12 @@ public class GameController : MonoBehaviour
         
     }
 
+    public void OnResponseEndGame(bool isSuccess, ResponsePacketData.EndGame data)
+    {
+        _gameState = InGameState.Ended;
+        _rankHandler.UpdateRank(_players, data);
+    }
+
     private GamePlayer GetPlayer(int index)
     {
         return _players[index];
@@ -141,6 +152,11 @@ public class GameController : MonoBehaviour
 
     private void HandleInput()
     {
+        if (_gameState != InGameState.Playing)
+        {
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             OnClickBell();
@@ -178,4 +194,11 @@ public class GameController : MonoBehaviour
     }
 
 
+}
+
+public enum InGameState
+{
+    BeforeStart,
+    Playing,
+    Ended,
 }
