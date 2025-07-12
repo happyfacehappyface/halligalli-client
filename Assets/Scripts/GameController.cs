@@ -21,13 +21,17 @@ public class GameController : MonoBehaviour
     private int _myPlayerIndex;
     private int _totalPlayerCount;
     private bool _initialized = false;
+    private ResponsePacketData.StartGame _startGameData;
 
     public void ManualStart(ResponsePacketData.StartGame data)
     {
         _currentTime = TimeSpan.Zero;
         _gameDrawer.ManualStart(this);
-        OnStartGame(data);
+        //OnStartGame(data);
+        _startGameData = data;
         _initialized = true;
+
+        NetworkManager.Instance.SendMessageToServer(new RequestPacketData.ReadyGame());
     }
 
     private void OnStartGame(ResponsePacketData.StartGame data)
@@ -49,16 +53,22 @@ public class GameController : MonoBehaviour
         //StartCoroutine(CO_ShowRandomCard());
     }
 
-    private IEnumerator CO_ShowRandomCard()
+    public void OnResponseReadyGame(bool isSuccess, ResponsePacketData.ReadyGame data)
     {
-        int playerIndex = 0;
-
-        while (true)
+        if (isSuccess)
         {
-            yield return new WaitForSeconds(1f);
-            OnResponseShowCard(playerIndex, Utils.GetRandomFruitCard());
-            playerIndex = Utils.RealModulo((playerIndex + 1), _totalPlayerCount);
+            OnStartGame(_startGameData);
         }
+        else
+        {
+            // TODO: 오류 처리 (Outgame으로 돌아가기)
+        }
+    }
+
+    public void OnResponseOpenCard(bool isSuccess, ResponsePacketData.OpenCard data)
+    {
+        _players[data.playerIndex].ChangeTopCard(new FruitCard(data.fruitIndex, data.fruitCount));
+        _gameDrawer.OnPlayerUpdatedWithFlipCard(data.playerIndex);
     }
 
     private GamePlayer GetPlayer(int index)
@@ -94,13 +104,6 @@ public class GameController : MonoBehaviour
         SoundManager.Instance.PlaySfxBell(0f);
         _gameDrawer.OnBellRing(playerIndex, _players[playerIndex].ColorCode);
     }
-
-    private void OnResponseShowCard(int playerIndex, FruitCard showedCard)
-    {
-        _players[playerIndex].ChangeTopCard(showedCard);
-        _gameDrawer.OnPlayerUpdatedWithFlipCard(playerIndex);
-    }
-
     
 
     private void ManualUpdate()

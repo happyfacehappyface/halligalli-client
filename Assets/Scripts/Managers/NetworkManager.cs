@@ -171,6 +171,20 @@ public class NetworkManager : MonoBehaviour
                 FindObjectOfType<OutGameController>()?.OnResponseStartGame(isSuccess, (ResponsePacketData.StartGame)data);
             }
         },
+        {
+            typeof(ResponsePacketData.ReadyGame),
+            (isSuccess, data) => {
+                Utils.Log("ReadyGame");
+                FindObjectOfType<GameController>()?.OnResponseReadyGame(isSuccess, (ResponsePacketData.ReadyGame)data);
+            }
+        },
+        {
+            typeof(ResponsePacketData.OpenCard),
+            (isSuccess, data) => {
+                Utils.Log("OpenCard");
+                FindObjectOfType<GameController>()?.OnResponseOpenCard(isSuccess, (ResponsePacketData.OpenCard)data);
+            }
+        },
 
         /*
         {
@@ -304,6 +318,7 @@ public class NetworkManager : MonoBehaviour
         { 1, typeof(RequestPacketData.Ping) },
         { 1001, typeof(RequestPacketData.EnterRoom) },
         { 1002, typeof(RequestPacketData.LeaveRoom) },
+        { 1011, typeof(RequestPacketData.ReadyGame) },
         /*
         { 1000, typeof(RequestPacketData.Login) },
         { 2000, typeof(RequestPacketData.CreateRoom) },
@@ -342,6 +357,8 @@ public class NetworkManager : MonoBehaviour
         { 1001, typeof(ResponsePacketData.EnterRoom) },
         { 1002, typeof(ResponsePacketData.LeaveRoom) },
         { 1010, typeof(ResponsePacketData.StartGame) },
+        { 1011, typeof(ResponsePacketData.ReadyGame) },
+        { 2000, typeof(ResponsePacketData.OpenCard) },
 
         /*
         { 1000, typeof(ResponsePacketData.Login) },
@@ -498,6 +515,8 @@ public abstract record RequestPacketData
     public sealed record Ping() : RequestPacketData;
     public sealed record EnterRoom() : RequestPacketData;
     public sealed record LeaveRoom() : RequestPacketData;
+    public sealed record ReadyGame() : RequestPacketData;
+    
 }
 
 public abstract record ResponsePacketData
@@ -508,6 +527,8 @@ public abstract record ResponsePacketData
     public sealed record LeaveRoom() : ResponsePacketData;
     
     public sealed record StartGame(int playerCount, string[] playerNames, int myIndex, int startingCards) : ResponsePacketData;
+    public sealed record ReadyGame() : ResponsePacketData;
+    public sealed record OpenCard(int fruitIndex, int fruitCount, int playerIndex) : ResponsePacketData;
 }
 
 
