@@ -72,14 +72,14 @@ public class NetworkManager : MonoBehaviour
 
             if (_responseHandlers.TryGetValue(data.GetType(), out var handler))
             {
-                handler(true, 0, data);
+                handler(true, data);
             }
             else if (data is ResponsePacketData.Error error)
             {
                 if (_responseSignalToType.TryGetValue(error.code, out var expectedType) &&
                     _responseHandlers.TryGetValue(expectedType, out var fallbackHandler))
                 {
-                    fallbackHandler(false, error.errorCode, null!);
+                    fallbackHandler(false, null!);
                 }
                 else
                 {
@@ -140,13 +140,13 @@ public class NetworkManager : MonoBehaviour
     }
 
 
-    private static readonly Dictionary<Type, Action<bool, int, ResponsePacketData>> _responseHandlers =
+    private static readonly Dictionary<Type, Action<bool, ResponsePacketData>> _responseHandlers =
     new()
     {
 
         {
             typeof(ResponsePacketData.Pong),
-            (isSuccess, errorCode, data) => {
+            (isSuccess, data) => {
                 Utils.Log("Pong");
             }
         }
@@ -435,12 +435,13 @@ public class NetworkManager : MonoBehaviour
         var code = jo["code"]?.Value<int>()
             ?? throw new JsonSerializationException("Missing 'code' field");
 
-        var errorCode = jo["errorCode"]?.Value<int>()
-            ?? throw new JsonSerializationException("Missing 'errorCode' field");
+        //var errorCode = jo["errorCode"]?.Value<int>()
+        //    ?? throw new JsonSerializationException("Missing 'errorCode' field");
 
         if (code != 200)
         {
-            return new ResponsePacketData.Error(signal, errorCode);
+            //return new ResponsePacketData.Error(signal, errorCode);
+            return new ResponsePacketData.Error(signal);
         }
 
         var targetType = GetResponseTypeFromSignal(signal);
@@ -473,7 +474,7 @@ public abstract record RequestPacketData
 
 public abstract record ResponsePacketData
 {
-    public sealed record Error(int code, int errorCode) : ResponsePacketData;
+    public sealed record Error(int code) : ResponsePacketData;
     public sealed record Pong() : ResponsePacketData;
 }
 
