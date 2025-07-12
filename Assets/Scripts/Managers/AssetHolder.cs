@@ -8,6 +8,7 @@ public class AssetHolder : MonoBehaviour
     [SerializeField] private Sprite[] _fruitSprites;
 
     private bool _isReady = false;
+    public bool IsReady() => _isReady;
 
     private void Awake()
     {
