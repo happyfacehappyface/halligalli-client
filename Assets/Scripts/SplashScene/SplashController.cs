@@ -8,16 +8,6 @@ public class SplashSceneController : MonoBehaviour
     {
         StartCoroutine(WaitForReady());
 
-        /*
-        #if UNITY_WEBGL && !UNITY_EDITOR
-                WebGLInput.captureAllKeyboardInput = false;
-        #endif
-        */
-
-        #if UNITY_WEBGL
-            Utils.Log("Audio Settings - Output Sample Rate: " + AudioSettings.outputSampleRate);
-        #endif
-
     }
 
     private bool IsAllReady()

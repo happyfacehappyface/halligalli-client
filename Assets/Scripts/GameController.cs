@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -23,35 +22,31 @@ public class GameController : MonoBehaviour
     private int _totalPlayerCount;
     private bool _initialized = false;
 
-    public void ManualStart()
+    public void ManualStart(ResponsePacketData.StartGame data)
     {
         _currentTime = TimeSpan.Zero;
         _gameDrawer.ManualStart(this);
-        OnStartGame();
+        OnStartGame(data);
         _initialized = true;
     }
 
-    private void OnStartGame()
+    private void OnStartGame(ResponsePacketData.StartGame data)
     {
-        
-        _players = new GamePlayer[]
+        _myPlayerIndex = data.myIndex;
+        _totalPlayerCount = data.playerCount;
+
+        _players = new GamePlayer[_totalPlayerCount];
+
+        for (var i = 0; i < _totalPlayerCount; i++)
         {
-            new GamePlayer("Player1", 10, 0),
-            new GamePlayer("Player2", 10, 1),
-            new GamePlayer("Player3", 10, 2),
-            new GamePlayer("Player4", 10, 3),
-            new GamePlayer("Player5", 10, 3),
-            new GamePlayer("Player6", 10, 3),
-            new GamePlayer("Player7", 10, 3),
-            new GamePlayer("Player8", 10, 3),
-        };
+            _players[i] = new GamePlayer(data.playerNames[i], data.startingCards, 0);
+        }
 
         _gameDrawer.OnStartGame(_players, _myPlayerIndex);
 
-        _myPlayerIndex = 0;
-        _totalPlayerCount = 8;
+        
 
-        StartCoroutine(CO_ShowRandomCard());
+        //StartCoroutine(CO_ShowRandomCard());
     }
 
     private IEnumerator CO_ShowRandomCard()
@@ -150,7 +145,7 @@ public class GameController : MonoBehaviour
         {
             if (!_initialized)
             {
-                ManualStart();
+                //ManualStart();
             }
         }
         #endif

@@ -34,9 +34,9 @@ public class NetworkManager : MonoBehaviour
         //Utils.Log("Start NetworkManager");
         //await ConnectToServer("ws://paintingchess.duckdns.org:18000");
         //await ConnectToServer("wss://hachess.duckdns.org:18000");
-        #if UNITY_EDITOR
+        
         await ConnectToServer("ws://localhost:8080/ws");
-        #endif
+        
         
         
     }
@@ -149,7 +149,28 @@ public class NetworkManager : MonoBehaviour
             (isSuccess, data) => {
                 Utils.Log("Pong");
             }
-        }
+        },
+        {
+            typeof(ResponsePacketData.EnterRoom),
+            (isSuccess, data) => {
+                Utils.Log("EnterRoom");
+                FindObjectOfType<OutGameController>()?.OnResponseEnterRoom(isSuccess, (ResponsePacketData.EnterRoom)data);
+            }
+        },
+        {
+            typeof(ResponsePacketData.LeaveRoom),
+            (isSuccess, data) => {
+                Utils.Log("LeaveRoom");
+                FindObjectOfType<OutGameController>()?.OnResponseLeaveRoom(isSuccess, (ResponsePacketData.LeaveRoom)data);
+            }
+        },
+        {
+            typeof(ResponsePacketData.StartGame),
+            (isSuccess, data) => {
+                Utils.Log("StartGame");
+                FindObjectOfType<OutGameController>()?.OnResponseStartGame(isSuccess, (ResponsePacketData.StartGame)data);
+            }
+        },
 
         /*
         {
@@ -281,6 +302,8 @@ public class NetworkManager : MonoBehaviour
     private static readonly Dictionary<int, Type> _requestSignalToType = new()
     {
         { 1, typeof(RequestPacketData.Ping) },
+        { 1001, typeof(RequestPacketData.EnterRoom) },
+        { 1002, typeof(RequestPacketData.LeaveRoom) },
         /*
         { 1000, typeof(RequestPacketData.Login) },
         { 2000, typeof(RequestPacketData.CreateRoom) },
@@ -316,6 +339,9 @@ public class NetworkManager : MonoBehaviour
     private static readonly Dictionary<int, Type> _responseSignalToType = new()
     {
         { 1, typeof(ResponsePacketData.Pong) },
+        { 1001, typeof(ResponsePacketData.EnterRoom) },
+        { 1002, typeof(ResponsePacketData.LeaveRoom) },
+        { 1010, typeof(ResponsePacketData.StartGame) },
 
         /*
         { 1000, typeof(ResponsePacketData.Login) },
@@ -470,12 +496,18 @@ public record ResponsePacket(int signal, ResponsePacketData data);
 public abstract record RequestPacketData
 {
     public sealed record Ping() : RequestPacketData;
+    public sealed record EnterRoom() : RequestPacketData;
+    public sealed record LeaveRoom() : RequestPacketData;
 }
 
 public abstract record ResponsePacketData
 {
     public sealed record Error(int code) : ResponsePacketData;
     public sealed record Pong() : ResponsePacketData;
+    public sealed record EnterRoom() : ResponsePacketData;
+    public sealed record LeaveRoom() : ResponsePacketData;
+    
+    public sealed record StartGame(int playerCount, string[] playerNames, int myIndex, int startingCards) : ResponsePacketData;
 }
 
 

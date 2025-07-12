@@ -10,6 +10,7 @@ public class OutGameController : MonoBehaviour
 {
 
     [SerializeField] private GameObject _waitGamePopup;
+    [SerializeField] private GameObject _waitForServer;
 
 
     [SerializeField] private GameObject _touchBlocker;
@@ -26,7 +27,7 @@ public class OutGameController : MonoBehaviour
         #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            OnResponseStartGame();
+            //OnResponseStartGame();
         }
 
 
@@ -37,41 +38,64 @@ public class OutGameController : MonoBehaviour
         #endif
     }
 
-    public void OnClickWaitGame()
+    public void OnClickEnterRoom()
+    {
+        SoundManager.Instance.PlaySfxButtonClick(0f);
+        NetworkManager.Instance.SendMessageToServer(new RequestPacketData.EnterRoom());
+        _waitForServer.SetActive(true);
+    }
+
+    public void OnResponseEnterRoom(bool isSuccess, ResponsePacketData.EnterRoom data)
+    {
+        if (isSuccess)
+        {
+            _waitGamePopup.SetActive(true);
+        }
+        else
+        {
+            OpenPopupError("문제 발생!", "게임이 이미 시작되었거나 방이 가득 찼습니다.");
+        }
+
+        _waitForServer.SetActive(false);
+        
+    }
+
+    public void OnClickLeaveRoom()
     {
         // TODO: Send Packet to Server
-
         SoundManager.Instance.PlaySfxButtonClick(0f);
-        OnResponseWaitGame();
+        NetworkManager.Instance.SendMessageToServer(new RequestPacketData.LeaveRoom());
+        _waitForServer.SetActive(true);
     }
 
-    public void OnResponseWaitGame()
+    public void OnResponseLeaveRoom(bool isSuccess, ResponsePacketData.LeaveRoom data)
     {
-        _waitGamePopup.SetActive(true);
+        if (isSuccess)
+        {
+            _waitGamePopup.SetActive(false);
+            _waitForServer.SetActive(false);
+        }
+        else
+        {
+            OpenPopupError("문제 발생!", "방을 나갈 수 없습니다. 다시 시도해주세요");
+        }
     }
 
-    public void OnClickCancelWaitGame()
-    {
-        // TODO: Send Packet to Server
-        SoundManager.Instance.PlaySfxButtonClick(0f);
-        _waitGamePopup.SetActive(false);
-    }
-
-    public void OnResponseStartGame()
+    public void OnResponseStartGame(bool isSuccess, ResponsePacketData.StartGame data)
     {
         _cachedStartGameHandler = (scene, mode) =>
         {
             SceneManager.sceneLoaded -= _cachedStartGameHandler;
-            StartGame(scene, mode);
+            StartGame(scene, mode, data);
         };
 
         SceneManager.sceneLoaded += _cachedStartGameHandler;
         SceneManager.LoadScene("InGameScene");
     }
 
-    public void StartGame(Scene scene, LoadSceneMode mode)
+    public void StartGame(Scene scene, LoadSceneMode mode, ResponsePacketData.StartGame data)
     {
-        FindObjectOfType<GameController>()?.ManualStart();
+        FindObjectOfType<GameController>()?.ManualStart(data);
     }
 
     public void OnClickClosePopup()
