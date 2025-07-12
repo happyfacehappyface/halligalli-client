@@ -639,6 +639,7 @@ GameObject:
   - component: {fileID: 808190640}
   - component: {fileID: 808190642}
   - component: {fileID: 808190643}
+  - component: {fileID: 808190644}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -686,6 +687,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de6d716dc80247d4b8728af65eaa63e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _animationHandler: {fileID: 808190644}
   _playerItemPrefab: {fileID: 7908846772427583212, guid: 832a22f2642d22b468e2d7a71859091a, type: 3}
   _playerItemParent: {fileID: 998111828}
   _portraitPrefab: {fileID: 2072060494453545947, guid: 478b1132f3676354d9295ed2a7088159, type: 3}
@@ -695,6 +697,20 @@ MonoBehaviour:
   _handImages:
   - {fileID: 1511813232}
   - {fileID: 2049777797}
+--- !u!114 &808190644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 808190639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ff57f76302fa1c49b5990c7c6ed2c85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cardBackPrefab: {fileID: 2758262629064388076, guid: 7bae60e4f59b3164f8cf54e7849bbb52, type: 3}
+  _cardBackParent: {fileID: 1747910998}
 --- !u!1001 &866114962
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1534,7 +1550,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1747910998}
   m_Layer: 5
-  m_Name: Animation Card In
+  m_Name: Animation Card Backs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

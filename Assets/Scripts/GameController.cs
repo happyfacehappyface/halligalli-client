@@ -71,33 +71,56 @@ public class GameController : MonoBehaviour
         _gameDrawer.OnPlayerUpdatedWithFlipCard(data.playerIndex);
     }
 
+    public void OnResponseRingBellCorrect(bool isSuccess, ResponsePacketData.RingBellCorrect data)
+    {
+        int[] deckCount = new int[_players.Length];
+        for (var i = 0; i < _players.Length; i++)
+        {
+            deckCount[i] = _players[i].DeckCardCount;
+        }
+
+        _gameDrawer.OnStartNewAnimation(new CorrectAnimationItem(data.playerIndex, deckCount));
+
+        OnBellRing(data.playerIndex);
+
+        ResetAllShowCards();
+        SetAllDeckCards(data.playerCards);
+        _gameDrawer.OnPlayersUpdated();
+    }
+
+    public void OnResponseRingBellWrong(bool isSuccess, ResponsePacketData.RingBellWrong data)
+    {
+        //_gameDrawer.OnStartNewAnimation();
+
+        OnBellRing(data.playerIndex);
+
+        SetAllDeckCards(data.playerCards);
+        _gameDrawer.OnPlayersUpdated();
+
+        
+    }
+
     private GamePlayer GetPlayer(int index)
     {
         return _players[index];
     }
 
-    private void OnResponseCorrectBellRing(int playerIndex)
+    private void ResetAllShowCards()
     {
-        OnBellRing(playerIndex);
+        foreach (var player in _players)
+        {
+            player.ResetShowCard();
+        }
+    }
 
-        int totalOpenedCardCount = 0;
-
+    private void SetAllDeckCards(int[] deckCount)
+    {
         for (var i = 0; i < _players.Length; i++)
         {
-            totalOpenedCardCount += _players[i].ShowCardCount;
-            _players[i].ResetShowCard();
+            _players[i].DeckCardCount = deckCount[i];
         }
-
-        _players[playerIndex].DeckCardCount += totalOpenedCardCount;
-
-        _gameDrawer.OnPlayersUpdated();
-
     }
 
-    private void OnResponseInCorrectBellRing(int playerIndex)
-    {
-        OnBellRing(playerIndex);
-    }
 
     private void OnBellRing(int playerIndex)
     {
@@ -112,6 +135,8 @@ public class GameController : MonoBehaviour
 
     
         HandleInput();
+
+        _gameDrawer.ManualUpdate();
     }
 
     private void HandleInput()
@@ -120,15 +145,11 @@ public class GameController : MonoBehaviour
         {
             OnClickBell();
         }
-        else if (Input.GetKeyDown(KeyCode.B))
-        {
-            OnResponseInCorrectBellRing(_myPlayerIndex);
-        }
     }
 
     public void OnClickBell()
     {
-        OnResponseCorrectBellRing(_myPlayerIndex);
+        NetworkManager.Instance.SendMessageToServer(new RequestPacketData.RingBell());
     }
 
     protected void Start()

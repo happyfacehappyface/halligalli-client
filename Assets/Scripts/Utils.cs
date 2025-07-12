@@ -37,5 +37,33 @@ public static class Utils
         #endif
     }
 
+    
+    public static float GetLinearProgress(float start, float end, float progress)
+    {
+        if (start == end) return 0f;
+        return Mathf.Clamp01((progress - start) / (end - start));
+    }
+
+    public static float GetEaseInProgress(float start, float end, float progress)
+    {
+        if (start == end) return 0f;
+        float linearProgress = GetLinearProgress(start, end, progress);
+        return linearProgress * linearProgress;
+    }
+
+    public static float GetEaseOutProgress(float start, float end, float progress)
+    {
+        if (start == end) return 0f;
+        float linearProgress = GetLinearProgress(start, end, progress);
+        return 1f - (1f - linearProgress) * (1f - linearProgress);
+    }
+
+    public static float GetEaseInOutProgress(float start, float end, float progress)
+    {
+        if (start == end) return 0f;
+        float linearProgress = GetLinearProgress(start, end, progress);
+        return linearProgress < 0.5f ? 2f * linearProgress * linearProgress : 1f - Mathf.Pow(-2f * linearProgress + 2f, 2f) / 2f;
+    }
+
 
 }

@@ -186,6 +186,22 @@ public class NetworkManager : MonoBehaviour
             }
         },
 
+        {
+            typeof(ResponsePacketData.RingBellCorrect),
+            (isSuccess, data) => {
+                Utils.Log("RingBellCorrect");
+                FindObjectOfType<GameController>()?.OnResponseRingBellCorrect(isSuccess, (ResponsePacketData.RingBellCorrect)data);
+            }
+        },
+
+        {
+            typeof(ResponsePacketData.RingBellWrong),
+            (isSuccess, data) => {
+                Utils.Log("RingBellWrong");
+                FindObjectOfType<GameController>()?.OnResponseRingBellWrong(isSuccess, (ResponsePacketData.RingBellWrong)data);
+            }
+        },
+
         /*
         {
             typeof(ResponsePacketData.Login),
@@ -319,6 +335,7 @@ public class NetworkManager : MonoBehaviour
         { 1001, typeof(RequestPacketData.EnterRoom) },
         { 1002, typeof(RequestPacketData.LeaveRoom) },
         { 1011, typeof(RequestPacketData.ReadyGame) },
+        { 2001, typeof(RequestPacketData.RingBell) },
         /*
         { 1000, typeof(RequestPacketData.Login) },
         { 2000, typeof(RequestPacketData.CreateRoom) },
@@ -359,6 +376,8 @@ public class NetworkManager : MonoBehaviour
         { 1010, typeof(ResponsePacketData.StartGame) },
         { 1011, typeof(ResponsePacketData.ReadyGame) },
         { 2000, typeof(ResponsePacketData.OpenCard) },
+        { 2002, typeof(ResponsePacketData.RingBellCorrect) },
+        { 2003, typeof(ResponsePacketData.RingBellWrong) },
 
         /*
         { 1000, typeof(ResponsePacketData.Login) },
@@ -516,6 +535,8 @@ public abstract record RequestPacketData
     public sealed record EnterRoom() : RequestPacketData;
     public sealed record LeaveRoom() : RequestPacketData;
     public sealed record ReadyGame() : RequestPacketData;
+
+    public sealed record RingBell() : RequestPacketData;
     
 }
 
@@ -529,6 +550,9 @@ public abstract record ResponsePacketData
     public sealed record StartGame(int playerCount, string[] playerNames, int myIndex, int startingCards) : ResponsePacketData;
     public sealed record ReadyGame() : ResponsePacketData;
     public sealed record OpenCard(int fruitIndex, int fruitCount, int playerIndex) : ResponsePacketData;
+    public sealed record RingBellCorrect(int playerIndex, int[] playerCards) : ResponsePacketData;
+    public sealed record RingBellWrong(int playerIndex, bool[] cardGivenTo, int[] playerCards) : ResponsePacketData;
+
 }
 
 

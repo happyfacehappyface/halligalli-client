@@ -8,6 +8,7 @@ public class GameDrawer : MonoBehaviour
     private GameController _controller;
     private int _myPlayerIndex;
     private int _playerCount;
+    [SerializeField] private AnimationHandler _animationHandler;
     [SerializeField] private GameObject _playerItemPrefab;
     [SerializeField] private Transform _playerItemParent;
 
@@ -24,6 +25,12 @@ public class GameDrawer : MonoBehaviour
     public void ManualStart(GameController controller)
     {
         _controller = controller;
+        _animationHandler.ManualStart(this);
+    }
+
+    public void ManualUpdate()
+    {
+        _animationHandler.ManualUpdate();
     }
 
     public void OnStartGame(GamePlayer[] players, int myPlayerIndex)
@@ -67,7 +74,7 @@ public class GameDrawer : MonoBehaviour
 
     public void OnBellRing(int playerIndex, int colorCode)
     {
-        _handTransform.localRotation = Quaternion.Euler(0, 0, GetPlayerAngle(playerIndex));
+        _handTransform.localRotation = GetPlayerRotation(playerIndex);
 
         foreach (var handImage in _handImages)
         {
@@ -91,15 +98,13 @@ public class GameDrawer : MonoBehaviour
 
         for (var i = 0; i < _portraitComponents.Length; i++)
         {
-            float angle = GetPlayerAngle(i);
             float radius = 570f;
+
+            Vector2 playerVector = GetPlayerVector(i);
+            float playerAngle = GetPlayerAngle(i);
             
-            float angleInRadians = angle * Mathf.Deg2Rad;
-            float x = Mathf.Sin(angleInRadians) * radius;
-            float y = -Mathf.Cos(angleInRadians) * radius;
-            
-            _portraitComponents[i].transform.localPosition = new Vector3(x, y, 1f);
-            _portraitComponents[i].AdjustAngle(angle);
+            _portraitComponents[i].transform.localPosition = playerVector * radius;
+            _portraitComponents[i].AdjustAngle(playerAngle);
         }
     }
 
@@ -121,34 +126,38 @@ public class GameDrawer : MonoBehaviour
 
     public float GetPlayerAngle(int playerIndex)
     {
-        int opponentCount = _playerCount - 1;
-        float angleStart, angleStep;
+        // 내 플레이어를 기준으로 상대적 위치 계산
+        int relativeIndex = Utils.RealModulo((playerIndex - _myPlayerIndex), _playerCount);
+        
+        // 전체 원(360도)을 플레이어 수로 나누어 균등 배치
+        float angleStep = 360f / _playerCount;
+        return angleStep * relativeIndex;
+    }
 
-        if (opponentCount == 1)
-        {
-            angleStart = 180;
-            angleStep = 0;
-        }
-        else if (opponentCount == 2)
-        {
-            angleStart = 120;
-            angleStep = 120;
-        }
-        else
-        {
-            angleStart = 90;
-            angleStep = 180 * (1f / (float)(opponentCount - 1));
-        }
+    public Vector2 GetPlayerVector(int playerIndex)
+    {
+        float angle = GetPlayerAngle(playerIndex);
+        
+        float angleInRadians = angle * Mathf.Deg2Rad;
+        float x = Mathf.Sin(angleInRadians);
+        float y = -Mathf.Cos(angleInRadians);
+        
+        return new Vector2(x, y);
+    }
 
-        if (playerIndex == _myPlayerIndex)
-        {
-            return 0f;
-        }
-        else
-        {
-            int indexDelta = Utils.RealModulo((playerIndex - _myPlayerIndex - 1), opponentCount);
-            return angleStart + (indexDelta * angleStep);
-        }
+    public Quaternion GetPlayerRotation(int playerIndex)
+    {
+        return Quaternion.Euler(0, 0, GetPlayerAngle(playerIndex));
+    }
+
+    public int GetPlayerCount()
+    {
+        return _playerCount;
+    }
+
+    public void OnStartNewAnimation(AnimationItem newAnimationItem)
+    {
+        _animationHandler.OnStartNewAnimation(newAnimationItem);
     }
 
     
