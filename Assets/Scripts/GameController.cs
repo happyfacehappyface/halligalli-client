@@ -21,12 +21,14 @@ public class GameController : MonoBehaviour
     
     private int _myPlayerIndex;
     private int _totalPlayerCount;
+    private bool _initialized = false;
 
-    private void ManualStart()
+    public void ManualStart()
     {
         _currentTime = TimeSpan.Zero;
         _gameDrawer.ManualStart(this);
         OnStartGame();
+        _initialized = true;
     }
 
     private void OnStartGame()
@@ -133,12 +135,27 @@ public class GameController : MonoBehaviour
 
     protected void Start()
     {
-        ManualStart();
+        //ManualStart();
     }
 
     protected void Update()
     {
-        ManualUpdate();
+        if (_initialized)
+        {
+            ManualUpdate();
+        }
+
+        #if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if (!_initialized)
+            {
+                ManualStart();
+            }
+        }
+        #endif
+
+
     }
 
 

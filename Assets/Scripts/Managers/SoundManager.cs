@@ -11,6 +11,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioSource _voiceSource;
 
     [SerializeField] private AudioClip[] _sfxBellRing;
+    [SerializeField] private AudioClip[] _sfxButtonClick;
 
     
     private bool _isReady = false;
@@ -37,6 +38,7 @@ public class SoundManager : MonoBehaviour
 
 
     public void PlaySfxBell(float delay) => PlayRandomSfx(_sfxBellRing, delay);
+    public void PlaySfxButtonClick(float delay) => PlayRandomSfx(_sfxButtonClick, delay);
 
     private void PlayRandomSfx(AudioClip[] clips, float delay)
     {
