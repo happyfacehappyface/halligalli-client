@@ -12,6 +12,7 @@ public class SoundManager : MonoBehaviour
 
     [SerializeField] private AudioClip[] _sfxBellRing;
     [SerializeField] private AudioClip[] _sfxButtonClick;
+    
 
     
     private bool _isReady = false;

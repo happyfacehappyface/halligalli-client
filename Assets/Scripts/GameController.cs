@@ -118,6 +118,7 @@ public class GameController : MonoBehaviour
     {
         _gameState = InGameState.Ended;
         _rankHandler.UpdateRank(_players, data);
+        Utils.Log("OnResponseEndGame");
     }
 
     public void OnClickExit()
@@ -157,7 +158,7 @@ public class GameController : MonoBehaviour
 
     private void ManualUpdate()
     {
-        _currentTime += TimeSpan.FromSeconds(Time.deltaTime);
+        _currentTime = _currentTime + TimeSpan.FromSeconds(Time.deltaTime);
 
     
         HandleInput();

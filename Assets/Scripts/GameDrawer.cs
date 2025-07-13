@@ -37,7 +37,7 @@ public class GameDrawer : MonoBehaviour
     {
         _animationHandler.ManualUpdate();
         _timeText.text = ((int) _controller.TimeLeft.TotalSeconds).ToString();
-        _timeText.color = _controller.TimeLeft.TotalSeconds > 10f ? Color.white : Color.red;
+        _timeText.color = _controller.TimeLeft.TotalSeconds > 10f ? Color.black : Color.red;
     }
 
     public void OnStartGame(GamePlayer[] players, int myPlayerIndex)
