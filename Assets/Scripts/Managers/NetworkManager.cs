@@ -209,6 +209,13 @@ public class NetworkManager : MonoBehaviour
                 FindObjectOfType<GameController>()?.OnResponseEndGame(isSuccess, (ResponsePacketData.EndGame)data);
             }
         },
+        {
+            typeof(ResponsePacketData.Emotion),
+            (isSuccess, data) => {
+                Utils.Log("Emotion");
+                FindObjectOfType<GameController>()?.OnResponseEmotion(isSuccess, (ResponsePacketData.Emotion)data);
+            }
+        },
 
         /*
         {
@@ -344,6 +351,7 @@ public class NetworkManager : MonoBehaviour
         { 1002, typeof(RequestPacketData.LeaveRoom) },
         { 1011, typeof(RequestPacketData.ReadyGame) },
         { 2001, typeof(RequestPacketData.RingBell) },
+        { 2004, typeof(RequestPacketData.Emotion) },
         /*
         { 1000, typeof(RequestPacketData.Login) },
         { 2000, typeof(RequestPacketData.CreateRoom) },
@@ -386,6 +394,7 @@ public class NetworkManager : MonoBehaviour
         { 2000, typeof(ResponsePacketData.OpenCard) },
         { 2002, typeof(ResponsePacketData.RingBellCorrect) },
         { 2003, typeof(ResponsePacketData.RingBellWrong) },
+        { 2004, typeof(ResponsePacketData.Emotion) },
         { 3000, typeof(ResponsePacketData.EndGame) },
 
         /*
@@ -546,6 +555,8 @@ public abstract record RequestPacketData
     public sealed record ReadyGame() : RequestPacketData;
 
     public sealed record RingBell() : RequestPacketData;
+
+    public sealed record Emotion(int emotionType) : RequestPacketData;
     
 }
 
@@ -562,7 +573,11 @@ public abstract record ResponsePacketData
     public sealed record RingBellCorrect(int playerIndex, int[] playerCards) : ResponsePacketData;
     public sealed record RingBellWrong(int playerIndex, bool[] cardGivenTo, int[] playerCards) : ResponsePacketData;
 
+    public sealed record Emotion(int playerIndex, int emotionType) : ResponsePacketData;
+
     public sealed record EndGame(int[] playerCards, int[] playerRanks) : ResponsePacketData;
+
+
 
 }
 

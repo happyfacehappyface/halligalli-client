@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class GameDrawer : MonoBehaviour
 {
@@ -36,7 +37,7 @@ public class GameDrawer : MonoBehaviour
     public void ManualUpdate()
     {
         _animationHandler.ManualUpdate();
-        _timeText.text = ((int) _controller.TimeLeft.TotalSeconds).ToString();
+        _timeText.text = Math.Max(0, (int) _controller.TimeLeft.TotalSeconds).ToString();
         _timeText.color = _controller.TimeLeft.TotalSeconds > 10f ? Color.black : Color.red;
     }
 
@@ -165,6 +166,11 @@ public class GameDrawer : MonoBehaviour
     public void OnStartNewAnimation(AnimationItem newAnimationItem)
     {
         _animationHandler.OnStartNewAnimation(newAnimationItem);
+    }
+
+    public void OnEmotion(int playerIndex, int emotionID)
+    {
+        _portraitComponents[playerIndex].UpdateEmotion(emotionID);
     }
 
     

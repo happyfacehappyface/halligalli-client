@@ -36,7 +36,7 @@ public class GameController : MonoBehaviour
         _currentTime = TimeSpan.Zero;
         _gameState = InGameState.BeforeStart;
         _gameDrawer.ManualStart(this);
-        //OnStartGame(data);
+        
         _startGameData = data;
         _initialized = true;
 
@@ -62,7 +62,7 @@ public class GameController : MonoBehaviour
 
         _gameDrawer.OnStartGame(_players, _myPlayerIndex);
 
-        
+        SoundManager.Instance.PlaySfxStartGame(0f);
 
         //StartCoroutine(CO_ShowRandomCard());
     }
@@ -83,6 +83,7 @@ public class GameController : MonoBehaviour
     {
         _players[data.playerIndex].ChangeTopCard(new FruitCard(data.fruitIndex, data.fruitCount));
         _gameDrawer.OnPlayerUpdatedWithFlipCard(data.playerIndex);
+        SoundManager.Instance.PlaySfxCardOpen(0f);
     }
 
     public void OnResponseRingBellCorrect(bool isSuccess, ResponsePacketData.RingBellCorrect data)
@@ -96,6 +97,7 @@ public class GameController : MonoBehaviour
         _gameDrawer.OnStartNewAnimation(new CorrectAnimationItem(data.playerIndex, openCount));
 
         OnBellRing(data.playerIndex);
+        SoundManager.Instance.PlaySfxCorrect(0.5f);
 
         ResetAllShowCards();
         SetAllDeckCards(data.playerCards);
@@ -107,6 +109,7 @@ public class GameController : MonoBehaviour
         _gameDrawer.OnStartNewAnimation(new WrongAnimationItem(data.playerIndex, data.cardGivenTo));
 
         OnBellRing(data.playerIndex);
+        SoundManager.Instance.PlaySfxWrong(0.5f);
 
         SetAllDeckCards(data.playerCards);
         _gameDrawer.OnPlayersUpdated();
@@ -118,6 +121,13 @@ public class GameController : MonoBehaviour
     {
         _gameState = InGameState.Ended;
         _rankHandler.UpdateRank(_players, data);
+        SoundManager.Instance.PlaySfxEndGame(0f);
+
+        if (data.playerRanks[_myPlayerIndex] == 1)
+        {
+            SoundManager.Instance.PlaySfxWinning(0f);
+        }
+
         Utils.Log("OnResponseEndGame");
     }
 
@@ -207,6 +217,16 @@ public class GameController : MonoBehaviour
         #endif
 
 
+    }
+
+    public void OnClickEmotion(int emotionID)
+    {
+        NetworkManager.Instance.SendMessageToServer(new RequestPacketData.Emotion(emotionID));
+    }
+
+    public void OnResponseEmotion(bool isSuccess, ResponsePacketData.Emotion data)
+    {
+        _gameDrawer.OnEmotion(data.playerIndex, data.emotionType);
     }
 
 

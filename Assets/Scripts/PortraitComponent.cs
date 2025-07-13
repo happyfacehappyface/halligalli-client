@@ -10,6 +10,9 @@ public class PortraitComponent : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _nameText;
     [SerializeField] private TextMeshProUGUI _cardLeftText;
     [SerializeField] private Transform _infoTransform;
+
+    [SerializeField] private Image _emotionImage;
+    [SerializeField] private Animator _emotionBubbleAnimator;
     private GamePlayer _player;
 
     public void ManualStart(GamePlayer player)
@@ -29,6 +32,12 @@ public class PortraitComponent : MonoBehaviour
     public void UpdateCardLeft()
     {
         _cardLeftText.text = _player.DeckCardCount.ToString();
+    }
+
+    public void UpdateEmotion(int emotionID)
+    {
+        _emotionImage.sprite = AssetHolder.Instance.GetEmotionSprite(emotionID);
+        _emotionBubbleAnimator.SetTrigger("Popup");
     }
 
 }

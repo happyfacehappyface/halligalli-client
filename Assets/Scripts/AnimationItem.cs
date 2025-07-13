@@ -59,6 +59,7 @@ public class WrongAnimationItem : AnimationItem
         _startAnimationTime = _animationHandler.CurrentAnimationTime;
 
         _cardBacks = new Transform[_gameDrawer.GetPlayerCount()];
+        bool isCardGiven = false;
 
         for (var i = 0; i < _cardBacks.Length; i++)
         {
@@ -68,8 +69,14 @@ public class WrongAnimationItem : AnimationItem
                 _cardBacks[i] = cardBack.transform;
                 cardBack.transform.localRotation = _gameDrawer.GetPlayerRotation(i);
                 cardBack.transform.localPosition = _gameDrawer.GetPlayerVector(i) * 210f;
+                isCardGiven = true;
             }
 
+        }
+
+        if (isCardGiven)
+        {
+            SoundManager.Instance.PlaySfxCardMove(0f);
         }
     }
 
@@ -145,7 +152,14 @@ public class CorrectAnimationItem : AnimationItem
                 _cardBacks[i].Add(cardBack.transform);
                 cardBack.transform.localRotation = _gameDrawer.GetPlayerRotation(i);
                 cardBack.transform.localPosition = _gameDrawer.GetPlayerVector(i) * 210f;
+
+                
             }
+        }
+
+        for (var i = 0; i < _cardMaxCount; i++)
+        {
+            SoundManager.Instance.PlaySfxCardMove((float)_duration.TotalSeconds * 0.5f * ((float)i / (float)_cardMaxCount));
         }
 
     }

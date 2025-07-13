@@ -50,10 +50,25 @@ MonoBehaviour:
   _bgmSource: {fileID: 3047558873774430750}
   _voiceSource: {fileID: 0}
   _sfxBellRing:
-  - {fileID: 8300000, guid: e6591f55d4b09ee4bb7959b092bf6dcd, type: 3}
-  - {fileID: 8300000, guid: aaca7167e51332f4eb11cb052ff7a4ee, type: 3}
+  - {fileID: 8300000, guid: 81acd8a00cf0e584488bc093541cf0ed, type: 3}
   _sfxButtonClick:
   - {fileID: 8300000, guid: 64fdc1c23c4f01a40b428085c6d86bdb, type: 3}
+  _sfxStartGame:
+  - {fileID: 8300000, guid: 6b72e1c3227d45e48aea049b55c636d8, type: 3}
+  _sfxEndGame:
+  - {fileID: 8300000, guid: 3fe3d00ed58a84c439a5daf4b6ecfc66, type: 3}
+  _sfxCorrect:
+  - {fileID: 8300000, guid: bae9f78af9e88ee46baf6a5359e4bb82, type: 3}
+  _sfxWrong:
+  - {fileID: 8300000, guid: 71c35456b562ada49a6c93dba81f08f5, type: 3}
+  _sfxCardOpen:
+  - {fileID: 8300000, guid: fc8cb822ab05f28489d1b0ad209864c5, type: 3}
+  _sfxCardMove:
+  - {fileID: 8300000, guid: 1f76402635a1b5948a4d6aae41cf1b70, type: 3}
+  _sfxTada:
+  - {fileID: 8300000, guid: dab044037fa730843af4795c923dd244, type: 3}
+  _sfxWinning:
+  - {fileID: 8300000, guid: 44aa98b2e4a76a6499261edba75f545a, type: 3}
 --- !u!82 &785902513724285422
 AudioSource:
   m_ObjectHideFlags: 0

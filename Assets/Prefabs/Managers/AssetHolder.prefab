@@ -48,3 +48,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: a79ec30041994ee42b2f992b3beba015, type: 3}
   - {fileID: 21300000, guid: aaa4189f5365e1f48809c4fd50ae231c, type: 3}
   - {fileID: 21300000, guid: 5685bc653428d94439e4186f449dceed, type: 3}
+  _emotionSprites:
+  - {fileID: 21300000, guid: e00e380011868214587ed531a771105b, type: 3}
+  - {fileID: 21300000, guid: c629321ac69c0604e88cce169f20f743, type: 3}
+  - {fileID: 21300000, guid: 53a36d8ef20af6e4b9da2831b00fa4eb, type: 3}
+  - {fileID: 21300000, guid: 6d8459f6eb82f744c947ad43407016fc, type: 3}

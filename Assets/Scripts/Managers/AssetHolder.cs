@@ -6,6 +6,7 @@ public class AssetHolder : MonoBehaviour
 {
     public static AssetHolder Instance;
     [SerializeField] private Sprite[] _fruitSprites;
+    [SerializeField] private Sprite[] _emotionSprites;
 
     private bool _isReady = false;
     public bool IsReady() => _isReady;
@@ -35,5 +36,10 @@ public class AssetHolder : MonoBehaviour
         if (characterID == 1) return new Color(0.7f, 0.7f, 0.7f);
         if (characterID == 2) return new Color(0.4f, 0.4f, 0.4f);
         return Color.white;
+    }
+
+    public Sprite GetEmotionSprite(int emotionID)
+    {
+        return _emotionSprites[emotionID];
     }
 }

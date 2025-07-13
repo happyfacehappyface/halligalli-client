@@ -12,6 +12,15 @@ public class SoundManager : MonoBehaviour
 
     [SerializeField] private AudioClip[] _sfxBellRing;
     [SerializeField] private AudioClip[] _sfxButtonClick;
+
+    [SerializeField] private AudioClip[] _sfxStartGame;
+    [SerializeField] private AudioClip[] _sfxEndGame;
+    [SerializeField] private AudioClip[] _sfxCorrect;
+    [SerializeField] private AudioClip[] _sfxWrong;
+    [SerializeField] private AudioClip[] _sfxCardOpen;
+    [SerializeField] private AudioClip[] _sfxCardMove;
+    [SerializeField] private AudioClip[] _sfxTada;
+    [SerializeField] private AudioClip[] _sfxWinning;
     
 
     
@@ -40,6 +49,14 @@ public class SoundManager : MonoBehaviour
 
     public void PlaySfxBell(float delay) => PlayRandomSfx(_sfxBellRing, delay);
     public void PlaySfxButtonClick(float delay) => PlayRandomSfx(_sfxButtonClick, delay);
+    public void PlaySfxStartGame(float delay) => PlayRandomSfx(_sfxStartGame, delay);
+    public void PlaySfxEndGame(float delay) => PlayRandomSfx(_sfxEndGame, delay);
+    public void PlaySfxCorrect(float delay) => PlayRandomSfx(_sfxCorrect, delay);
+    public void PlaySfxWrong(float delay) => PlayRandomSfx(_sfxWrong, delay);
+    public void PlaySfxCardOpen(float delay) => PlayRandomSfx(_sfxCardOpen, delay);
+    public void PlaySfxCardMove(float delay) => PlayRandomSfx(_sfxCardMove, delay);
+    public void PlaySfxTada(float delay) => PlayRandomSfx(_sfxTada, delay);
+    public void PlaySfxWinning(float delay) => PlayRandomSfx(_sfxWinning, delay);
 
     private void PlayRandomSfx(AudioClip[] clips, float delay)
     {
