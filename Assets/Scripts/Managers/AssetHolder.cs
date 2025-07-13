@@ -34,13 +34,6 @@ public class AssetHolder : MonoBehaviour
         return _fruitSprites[fruitID];
     }
 
-    public Color GetCharacterColor(int characterID)
-    {
-        if (characterID == 0) return new Color(1.0f, 1.0f, 1.0f);
-        if (characterID == 1) return new Color(0.7f, 0.7f, 0.7f);
-        if (characterID == 2) return new Color(0.4f, 0.4f, 0.4f);
-        return Color.white;
-    }
 
     public Sprite GetEmotionSprite(int emotionID)
     {
@@ -53,5 +46,19 @@ public class AssetHolder : MonoBehaviour
         if (rank == 2) return _silverCrownSprite;
         if (rank == 3) return _bronzeCrownSprite;
         return null;
+    }
+
+    public Color GetCharacterColor(int colorCode)
+    {
+        if (colorCode == 0) return new Color(1.0f, 1.0f, 1.0f);
+        if (colorCode == 1) return new Color(0.7f, 0.7f, 0.7f);
+        if (colorCode == 2) return new Color(0.4f, 0.4f, 0.4f);
+        if (colorCode == 3) return new Color(0.2f, 0.2f, 0.2f);
+        if (colorCode == 4) return new Color(0.1f, 0.1f, 0.1f);
+        if (colorCode == 5) return new Color(0.0f, 0.0f, 0.0f);
+        if (colorCode == 6) return new Color(0.0f, 0.0f, 0.0f);
+        if (colorCode == 7) return new Color(0.0f, 0.0f, 0.0f);
+        if (colorCode == 8) return new Color(0.0f, 0.0f, 0.0f);
+        return Color.white;
     }
 }

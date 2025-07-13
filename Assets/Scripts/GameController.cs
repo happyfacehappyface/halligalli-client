@@ -58,7 +58,7 @@ public class GameController : MonoBehaviour
 
         for (var i = 0; i < _totalPlayerCount; i++)
         {
-            _players[i] = new GamePlayer(data.playerNames[i], data.startingCards, 0);
+            _players[i] = new GamePlayer(data.playerNames[i], data.startingCards, i);
         }
 
         _gameDrawer.OnStartGame(_players, _myPlayerIndex);

@@ -53,3 +53,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c629321ac69c0604e88cce169f20f743, type: 3}
   - {fileID: 21300000, guid: 53a36d8ef20af6e4b9da2831b00fa4eb, type: 3}
   - {fileID: 21300000, guid: 6d8459f6eb82f744c947ad43407016fc, type: 3}
+  _goldCrownSprite: {fileID: 21300000, guid: ab1c59851f9c25e4f9940fa34c0752d5, type: 3}
+  _silverCrownSprite: {fileID: 21300000, guid: 14780029b2e4bdd42ac4a46a89c32336, type: 3}
+  _bronzeCrownSprite: {fileID: 21300000, guid: 8e8d844804b853048a7e03315d1f9930, type: 3}

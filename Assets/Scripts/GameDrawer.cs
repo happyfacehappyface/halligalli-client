@@ -99,6 +99,7 @@ public class GameDrawer : MonoBehaviour
     public void OnPlayerUpdatedWithFlipCard(int playerIndex)
     {
         _playerComponents[playerIndex].UpdateWithFlipCard();
+        _portraitComponents[playerIndex].UpdateCardLeft();
     }
 
     private void AdjustPlayerAngle()
