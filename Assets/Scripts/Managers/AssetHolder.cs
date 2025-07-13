@@ -8,6 +8,10 @@ public class AssetHolder : MonoBehaviour
     [SerializeField] private Sprite[] _fruitSprites;
     [SerializeField] private Sprite[] _emotionSprites;
 
+    [SerializeField] private Sprite _goldCrownSprite;
+    [SerializeField] private Sprite _silverCrownSprite;
+    [SerializeField] private Sprite _bronzeCrownSprite;
+
     private bool _isReady = false;
     public bool IsReady() => _isReady;
 
@@ -41,5 +45,13 @@ public class AssetHolder : MonoBehaviour
     public Sprite GetEmotionSprite(int emotionID)
     {
         return _emotionSprites[emotionID];
+    }
+
+    public Sprite GetCrownSprite(int rank)
+    {
+        if (rank == 1) return _goldCrownSprite;
+        if (rank == 2) return _silverCrownSprite;
+        if (rank == 3) return _bronzeCrownSprite;
+        return null;
     }
 }
