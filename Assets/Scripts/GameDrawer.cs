@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameDrawer : MonoBehaviour
 {
@@ -19,6 +20,10 @@ public class GameDrawer : MonoBehaviour
     [SerializeField] private Transform _handTransform;
     [SerializeField] private Animator _handAnimator;
     [SerializeField] private Image[] _handImages;
+
+
+    [SerializeField] private TextMeshProUGUI _timeText;
+
     private PlayerComponent[] _playerComponents;
     private PortraitComponent[] _portraitComponents;
 
@@ -31,6 +36,8 @@ public class GameDrawer : MonoBehaviour
     public void ManualUpdate()
     {
         _animationHandler.ManualUpdate();
+        _timeText.text = ((int) _controller.TimeLeft.TotalSeconds).ToString();
+        _timeText.color = _controller.TimeLeft.TotalSeconds > 10f ? Color.white : Color.red;
     }
 
     public void OnStartGame(GamePlayer[] players, int myPlayerIndex)

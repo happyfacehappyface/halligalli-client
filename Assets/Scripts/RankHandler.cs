@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RankHandler : MonoBehaviour
 {
-    [SerializeField] private GameObject _rankPanel;
+    [SerializeField] private Animator _rankAnimator;
     [SerializeField] private GameObject _rankItemPrefab;
     [SerializeField] private Transform _rankItemParent;
 
@@ -18,7 +18,7 @@ public class RankHandler : MonoBehaviour
     
     public void UpdateRank(GamePlayer[] players, ResponsePacketData.EndGame data)
     {
-        _rankPanel.SetActive(true);
+        _rankAnimator.SetTrigger("Open");
         ClearAllRankItems();
         for (var r = 1; r <= data.playerRanks.Length; r++)
         {

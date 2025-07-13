@@ -556,7 +556,7 @@ public abstract record ResponsePacketData
     public sealed record EnterRoom() : ResponsePacketData;
     public sealed record LeaveRoom() : ResponsePacketData;
     
-    public sealed record StartGame(int playerCount, string[] playerNames, int myIndex, int startingCards) : ResponsePacketData;
+    public sealed record StartGame(int playerCount, string[] playerNames, int myIndex, int startingCards, int gameTimeLimit) : ResponsePacketData;
     public sealed record ReadyGame() : ResponsePacketData;
     public sealed record OpenCard(int fruitIndex, int fruitCount, int playerIndex) : ResponsePacketData;
     public sealed record RingBellCorrect(int playerIndex, int[] playerCards) : ResponsePacketData;

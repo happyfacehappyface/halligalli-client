@@ -14,6 +14,10 @@ public class GameController : MonoBehaviour
 
     private TimeSpan _currentTime;
     public TimeSpan CurrentTime => _currentTime;
+    public TimeSpan TimeLeft => _updatedTimeLeft - (_currentTime - _updateTime);
+
+    private TimeSpan _updatedTimeLeft;
+    private TimeSpan _updateTime;
 
     private GamePlayer[] _players;
     public GamePlayer[] Players => _players;
@@ -43,6 +47,10 @@ public class GameController : MonoBehaviour
     {
         _myPlayerIndex = data.myIndex;
         _totalPlayerCount = data.playerCount;
+
+        _updatedTimeLeft = TimeSpan.FromSeconds(data.gameTimeLimit);
+        _updateTime = _currentTime;
+
         _gameState = InGameState.Playing;
 
         _players = new GamePlayer[_totalPlayerCount];
@@ -96,7 +104,7 @@ public class GameController : MonoBehaviour
 
     public void OnResponseRingBellWrong(bool isSuccess, ResponsePacketData.RingBellWrong data)
     {
-        //_gameDrawer.OnStartNewAnimation();
+        _gameDrawer.OnStartNewAnimation(new WrongAnimationItem(data.playerIndex, data.cardGivenTo));
 
         OnBellRing(data.playerIndex);
 
