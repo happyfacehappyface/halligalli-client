@@ -9,6 +9,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameDrawer _gameDrawer;
 
     [SerializeField] private RankHandler _rankHandler;
+    
 
     private InGameState _gameState;
 

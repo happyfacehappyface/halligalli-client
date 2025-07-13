@@ -11,6 +11,7 @@ public class GameDrawer : MonoBehaviour
     private int _myPlayerIndex;
     private int _playerCount;
     [SerializeField] private AnimationHandler _animationHandler;
+    [SerializeField] private EffectHandler _effectHandler;
     [SerializeField] private GameObject _playerItemPrefab;
     [SerializeField] private Transform _playerItemParent;
 
@@ -32,11 +33,13 @@ public class GameDrawer : MonoBehaviour
     {
         _controller = controller;
         _animationHandler.ManualStart(this);
+        _effectHandler.ManualStart(this);
     }
 
     public void ManualUpdate()
     {
         _animationHandler.ManualUpdate();
+        _effectHandler.ManualUpdate();
         _timeText.text = Math.Max(0, (int) _controller.TimeLeft.TotalSeconds).ToString();
         _timeText.color = _controller.TimeLeft.TotalSeconds > 10f ? Color.black : Color.red;
     }
@@ -90,6 +93,7 @@ public class GameDrawer : MonoBehaviour
         }
 
         _handAnimator.SetTrigger("HandUp");
+        _effectHandler.AddBellHitEffect(Vector3.zero, Quaternion.identity);
     }
 
     public void OnPlayerUpdatedWithFlipCard(int playerIndex)
