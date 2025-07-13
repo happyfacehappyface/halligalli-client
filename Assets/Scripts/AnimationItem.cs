@@ -113,17 +113,17 @@ public class CorrectAnimationItem : AnimationItem
     private GameDrawer _gameDrawer;
     private AnimationHandler _animationHandler;
     private TimeSpan _startAnimationTime;
-    private int[] _cardDeckCount;
+    private int[] _cardOpenCount;
     private int _correctPlayerIndex;
     private TimeSpan _duration;
 
     private List<Transform>[] _cardBacks;
     private int _cardMaxCount = 0;
 
-    public CorrectAnimationItem(int correctPlayerIndex, int[] cardDeckCount)
+    public CorrectAnimationItem(int correctPlayerIndex, int[] cardOpenCount)
     {
         _correctPlayerIndex = correctPlayerIndex;
-        _cardDeckCount = cardDeckCount;
+        _cardOpenCount = cardOpenCount;
         _duration = TimeSpan.FromSeconds(1f);
     }
 
@@ -137,9 +137,9 @@ public class CorrectAnimationItem : AnimationItem
 
         for (var i = 0; i < _cardBacks.Length; i++)
         {
-            _cardMaxCount = Mathf.Max(_cardMaxCount, _cardDeckCount[i]);
+            _cardMaxCount = Mathf.Max(_cardMaxCount, _cardOpenCount[i]);
             _cardBacks[i] = new List<Transform>();
-            for (var j = 0; j < _cardDeckCount[i]; j++)
+            for (var j = 0; j < _cardOpenCount[i]; j++)
             {
                 var cardBack = _animationHandler.CreateCardBack();
                 _cardBacks[i].Add(cardBack.transform);

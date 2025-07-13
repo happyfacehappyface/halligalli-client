@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -78,13 +79,13 @@ public class GameController : MonoBehaviour
 
     public void OnResponseRingBellCorrect(bool isSuccess, ResponsePacketData.RingBellCorrect data)
     {
-        int[] deckCount = new int[_players.Length];
+        int[] openCount = new int[_players.Length];
         for (var i = 0; i < _players.Length; i++)
         {
-            deckCount[i] = _players[i].DeckCardCount;
+            openCount[i] = _players[i].ShowCardCount;
         }
 
-        _gameDrawer.OnStartNewAnimation(new CorrectAnimationItem(data.playerIndex, deckCount));
+        _gameDrawer.OnStartNewAnimation(new CorrectAnimationItem(data.playerIndex, openCount));
 
         OnBellRing(data.playerIndex);
 
@@ -109,6 +110,12 @@ public class GameController : MonoBehaviour
     {
         _gameState = InGameState.Ended;
         _rankHandler.UpdateRank(_players, data);
+    }
+
+    public void OnClickExit()
+    {
+        SoundManager.Instance.PlaySfxButtonClick(0f);
+        SceneManager.LoadScene("OutGameScene");
     }
 
     private GamePlayer GetPlayer(int index)
