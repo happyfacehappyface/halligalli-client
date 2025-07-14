@@ -15,27 +15,25 @@ public class OutGameController : MonoBehaviour
 
     [SerializeField] private GameObject _touchBlocker;
     [SerializeField] private GameObject _popupError;
-    [SerializeField] private GameObject _popUpLogin;
+    [SerializeField] private GameObject _popUpAccount;
+    [SerializeField] private AccountPopupHandler _accountPopupHandler;
 
     [SerializeField] private TextMeshProUGUI _popUpErrorTitle;
     [SerializeField] private TextMeshProUGUI _popUpErrorDescription;
 
+    [SerializeField] private TextMeshProUGUI _accountNameText;
+
     private UnityAction<Scene, LoadSceneMode> _cachedStartGameHandler;
 
-    protected void Update()
+    protected void Start()
     {
-        #if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            //OnResponseStartGame();
-        }
+        ManualStart();
+    }
 
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            NetworkManager.Instance.SendMessageToServer(new RequestPacketData.Ping());
-        }
-        #endif
+    private void ManualStart()
+    {
+        _accountNameText.text = AccountManager.Instance.AccountName();
+        _accountPopupHandler.ManualStart(this);
     }
 
     public void OnClickEnterRoom()
@@ -104,13 +102,14 @@ public class OutGameController : MonoBehaviour
         ClosePopups();
     }
 
-    private void ClosePopups()
+    public void ClosePopups()
     {
         _popupError.SetActive(false);
         _touchBlocker.SetActive(false);
+        _popUpAccount.SetActive(false);
     }
 
-    private void OpenPopupError(string title, string description)
+    public void OpenPopupError(string title, string description)
     {
         ClosePopups();
         _popupError.SetActive(true);
@@ -119,16 +118,23 @@ public class OutGameController : MonoBehaviour
         _popUpErrorDescription.text = description;
     }
 
-    private void OpenPopupLogin()
+    private void OpenPopupAccount()
     {
         ClosePopups();
-        _popUpLogin.SetActive(true);
+        _popUpAccount.SetActive(true);
         _touchBlocker.SetActive(true);
+        _accountPopupHandler.OnOpenAccountPopup();
     }
 
-    public void OnClickLoginButton()
+    public void OnClickOpenAccountPopup()
     {
-        GoogleLoginHandler.Instance.TryLogin();
+        OpenPopupAccount();
+        SoundManager.Instance.PlaySfxButtonClick(0f);
+    }
+
+    public void OnAccountNameChanged()
+    {
+        _accountNameText.text = AccountManager.Instance.AccountName();
     }
 
 
