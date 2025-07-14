@@ -35,10 +35,14 @@ public class NetworkManager : MonoBehaviour
         //await ConnectToServer("ws://paintingchess.duckdns.org:18000");
         //await ConnectToServer("wss://hachess.duckdns.org:18000");
         
-        await ConnectToServer("ws://localhost:8080/ws");
-        
-        
-        
+
+
+        #if UNITY_WEBGL && !UNITY_EDITOR
+        await ConnectToServer("/ws");
+        #else
+        await ConnectToServer("ws://localhost:8081/ws");
+        #endif
+
     }
 
     public async Task ConnectToServer(string uri)

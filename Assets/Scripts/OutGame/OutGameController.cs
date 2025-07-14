@@ -126,6 +126,13 @@ public class OutGameController : MonoBehaviour
         _touchBlocker.SetActive(true);
     }
 
+    public void OnClickLoginButton()
+    {
+        GoogleLoginHandler.Instance.TryLogin();
+    }
+
+
+
 
 
 }
