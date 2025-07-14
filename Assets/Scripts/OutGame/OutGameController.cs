@@ -137,6 +137,41 @@ public class OutGameController : MonoBehaviour
         _accountNameText.text = AccountManager.Instance.AccountName();
     }
 
+    public void RequestCreateAccount(string id, string password, string nickname)
+    {
+        NetworkManager.Instance.SendMessageToServer(new RequestPacketData.CreateAccount(id, password, nickname));
+        _waitForServer.SetActive(true);
+    }
+
+    public void RequestLogin(string id, string password)
+    {
+        NetworkManager.Instance.SendMessageToServer(new RequestPacketData.Login(id, password));
+        _waitForServer.SetActive(true);
+    }
+
+    public void OnResponseCreateAccount(bool isSuccess, ResponsePacketData.CreateAccount data)
+    {
+        _waitForServer.SetActive(false);
+        ClosePopups();
+        if (!isSuccess)
+        {
+            OpenPopupError("계정 생성 실패", "다시 시도해주세요");
+        }
+    }
+
+    public void OnResponseLogin(bool isSuccess, ResponsePacketData.Login data)
+    {
+        _waitForServer.SetActive(false);
+        ClosePopups();
+        if (!isSuccess)
+        {
+            OpenPopupError("로그인 실패", "아이디와 비밀번호를 확인해주세요");
+        }
+        else
+        {
+            AccountManager.Instance.OnLogIn(data.id, data.nickname);
+        }
+    }
 
 
 

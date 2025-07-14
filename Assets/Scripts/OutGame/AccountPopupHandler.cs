@@ -55,7 +55,7 @@ public class AccountPopupHandler : MonoBehaviour
         }
         else
         {
-            // TODO: Send Packet to Server
+            _controller.RequestLogin(_logInIDInputField.text, _logInPasswordInputField.text);
         }
     }
 
@@ -68,7 +68,7 @@ public class AccountPopupHandler : MonoBehaviour
         }
         else
         {
-            // TODO: Send Packet to Server
+            _controller.RequestCreateAccount(_createAccountInputField.text, _createPasswordInputField.text, _createNickNameInputField.text);
         }
     }
 

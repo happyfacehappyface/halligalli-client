@@ -221,6 +221,22 @@ public class NetworkManager : MonoBehaviour
             }
         },
 
+        {
+            typeof(ResponsePacketData.CreateAccount),
+            (isSuccess, data) => {
+                Utils.Log("CreateAccount");
+                FindObjectOfType<OutGameController>()?.OnResponseCreateAccount(isSuccess, (ResponsePacketData.CreateAccount)data);
+            }
+        },
+
+        {
+            typeof(ResponsePacketData.Login),
+            (isSuccess, data) => {
+                Utils.Log("Login");
+                FindObjectOfType<OutGameController>()?.OnResponseLogin(isSuccess, (ResponsePacketData.Login)data);
+            }
+        },
+
         /*
         {
             typeof(ResponsePacketData.Login),
@@ -356,6 +372,8 @@ public class NetworkManager : MonoBehaviour
         { 1011, typeof(RequestPacketData.ReadyGame) },
         { 2001, typeof(RequestPacketData.RingBell) },
         { 2004, typeof(RequestPacketData.Emotion) },
+        { 4000, typeof(RequestPacketData.CreateAccount) },
+        { 4001, typeof(RequestPacketData.Login) },
         /*
         { 1000, typeof(RequestPacketData.Login) },
         { 2000, typeof(RequestPacketData.CreateRoom) },
@@ -400,6 +418,9 @@ public class NetworkManager : MonoBehaviour
         { 2003, typeof(ResponsePacketData.RingBellWrong) },
         { 2004, typeof(ResponsePacketData.Emotion) },
         { 3000, typeof(ResponsePacketData.EndGame) },
+
+        { 4000, typeof(ResponsePacketData.CreateAccount) },
+        { 4001, typeof(ResponsePacketData.Login) },
 
         /*
         { 1000, typeof(ResponsePacketData.Login) },
@@ -561,6 +582,10 @@ public abstract record RequestPacketData
     public sealed record RingBell() : RequestPacketData;
 
     public sealed record Emotion(int emotionType) : RequestPacketData;
+
+
+    public sealed record CreateAccount(string id, string password, string nickname) : RequestPacketData; // 4000
+    public sealed record Login(string id, string password) : RequestPacketData; // 4001
     
 }
 
@@ -581,7 +606,9 @@ public abstract record ResponsePacketData
 
     public sealed record EndGame(int[] playerCards, int[] playerRanks) : ResponsePacketData;
 
+    public sealed record CreateAccount(string id) : ResponsePacketData;
 
+    public sealed record Login(string id, string nickname) : ResponsePacketData;
 
 }
 
