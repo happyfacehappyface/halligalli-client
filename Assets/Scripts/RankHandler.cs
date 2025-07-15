@@ -16,7 +16,7 @@ public class RankHandler : MonoBehaviour
         }
     }
     
-    public void UpdateRank(GamePlayer[] players, ResponsePacketData.EndGame data)
+    public void UpdateRank(GamePlayer[] players, ResponsePacketData.EndGame data, int myIndex)
     {
         _rankAnimator.SetTrigger("Open");
         ClearAllRankItems();
@@ -27,7 +27,7 @@ public class RankHandler : MonoBehaviour
                 if (r == data.playerRanks[i])
                 {
                     var rankItem = Instantiate(_rankItemPrefab, _rankItemParent);
-                    rankItem.GetComponent<RankItemComponent>().UpdateRankItem(r, players[i].Name, data.playerCards[i], players[i].ColorCode);
+                    rankItem.GetComponent<RankItemComponent>().UpdateRankItem(r, players[i].Name, data.playerCards[i], players[i].ColorCode, myIndex == i);
                 }
             }
         }

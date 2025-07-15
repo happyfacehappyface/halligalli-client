@@ -68,7 +68,7 @@ public class CreateRoomPanelHandler : MonoBehaviour
     {
         SoundManager.Instance.PlaySfxButtonClick(0f);
 
-        if ((_roomNameInputField.text.Length <= 0) || (_roomNameInputField.text.Length > 14))
+        if ((_roomNameInputField.text.Length <= 0) || (_roomNameInputField.text.Length > 12))
         {
             return;
         }

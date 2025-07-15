@@ -66,4 +66,25 @@ public static class Utils
     }
 
 
+    public static string GetFruitVariationDescription(int fruitVariation)
+    {
+        return $"{fruitVariation}종류의\n과일이\n등장합니다!";
+    }
+
+    public static string GetFruitCountDescription(int fruitCount)
+    {
+        return $"{fruitCount}개의 같은\n과일이 보이면\n종을 치세요!";
+    }
+
+    public static string GetGameTempoDescription(int gameTempo)
+    {
+        string description = string.Empty;
+        if (gameTempo == 0) description = "천천히";
+        if (gameTempo == 1) description = "일반적인 속도로";
+        if (gameTempo == 2) description = "빠르게";
+        if (gameTempo > 3) description = "매우 빠르게";
+        return $"카드가\n{description}\n공개됩니다!";
+    }
+
+
 }

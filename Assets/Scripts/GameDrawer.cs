@@ -26,6 +26,10 @@ public class GameDrawer : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI _timeText;
 
+    [SerializeField] private TextMeshProUGUI _fruitVariationText;
+    [SerializeField] private TextMeshProUGUI _fruitCountText;
+    [SerializeField] private TextMeshProUGUI _gameTempoText;
+
     private PlayerComponent[] _playerComponents;
     private PortraitComponent[] _portraitComponents;
 
@@ -57,7 +61,7 @@ public class GameDrawer : MonoBehaviour
             _playerComponents[i].ManualStart(players[i]);
 
             _portraitComponents[i] = Instantiate(_portraitPrefab, _portraitParent).GetComponent<PortraitComponent>();
-            _portraitComponents[i].ManualStart(players[i]);
+            _portraitComponents[i].ManualStart(players[i], myPlayerIndex == i);
         }
 
         
@@ -81,6 +85,13 @@ public class GameDrawer : MonoBehaviour
             _playerComponents[i].UpdatePlayer();
             _portraitComponents[i].UpdateCardLeft();
         }
+    }
+
+    public void UpdateGameRuleData(ResponsePacketData.StartGame data)
+    {
+        _fruitVariationText.text = Utils.GetFruitVariationDescription(data.fruitVariation);
+        _fruitCountText.text = Utils.GetFruitCountDescription(data.fruitBellCount);
+        _gameTempoText.text = Utils.GetGameTempoDescription(data.gameTempo);
     }
 
     public void OnBellRing(int playerIndex, int colorCode)

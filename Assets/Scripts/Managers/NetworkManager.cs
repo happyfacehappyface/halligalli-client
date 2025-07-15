@@ -632,7 +632,7 @@ public abstract record ResponsePacketData
     public sealed record PlayerCountChanged(int playerCount) : ResponsePacketData;
     
     
-    public sealed record StartGame(int playerCount, string[] playerNames, int myIndex, int startingCards, int gameTimeLimit) : ResponsePacketData;
+    public sealed record StartGame(int playerCount, string[] playerNames, int myIndex, int startingCards, int gameTimeLimit, int fruitVariation, int fruitBellCount, int gameTempo) : ResponsePacketData;
     public sealed record ReadyGame() : ResponsePacketData;
     public sealed record OpenCard(int fruitIndex, int fruitCount, int playerIndex) : ResponsePacketData;
     public sealed record RingBellCorrect(int playerIndex, int[] playerCards) : ResponsePacketData;

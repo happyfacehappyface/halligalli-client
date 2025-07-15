@@ -64,12 +64,13 @@ public class OutGameController : MonoBehaviour
     {
         if (isSuccess)
         {
-            _insideRoomHandler.OnEnterRoom(data.roomName, data.maxPlayers);
+            _insideRoomHandler.OnEnterRoom(data);
             _canvasAnimator.SetTrigger("ToInRoom");
         }
         else
         {
             OpenPopupError("문제 발생!", "게임이 이미 시작되었거나 방이 가득 찼습니다.");
+            RequestGetRoomList();
         }
 
         _waitForServer.SetActive(false);
@@ -131,6 +132,7 @@ public class OutGameController : MonoBehaviour
         else
         {
             OpenPopupError("문제 발생!", "방을 생성할 수 없습니다. 다시 시도해주세요");
+            RequestGetRoomList();
         }
         _waitForServer.SetActive(false);
     }

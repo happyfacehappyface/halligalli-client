@@ -50,15 +50,14 @@ public class AssetHolder : MonoBehaviour
 
     public Color GetCharacterColor(int colorCode)
     {
-        if (colorCode == 0) return new Color(1.0f, 1.0f, 1.0f);
-        if (colorCode == 1) return new Color(0.7f, 0.7f, 0.7f);
-        if (colorCode == 2) return new Color(0.4f, 0.4f, 0.4f);
-        if (colorCode == 3) return new Color(0.2f, 0.2f, 0.2f);
-        if (colorCode == 4) return new Color(0.1f, 0.1f, 0.1f);
-        if (colorCode == 5) return new Color(0.0f, 0.0f, 0.0f);
-        if (colorCode == 6) return new Color(0.0f, 0.0f, 0.0f);
-        if (colorCode == 7) return new Color(0.0f, 0.0f, 0.0f);
-        if (colorCode == 8) return new Color(0.0f, 0.0f, 0.0f);
+        if (colorCode == 0) return new Color(251f/255f, 197f/255f, 96f/255f);
+        if (colorCode == 1) return new Color(236f/255f, 230f/255f, 220f/255f);
+        if (colorCode == 2) return new Color(53f/255f, 53f/255f, 53f/255f);
+        if (colorCode == 3) return new Color(123f/255f, 123f/255f, 123f/255f);
+        if (colorCode == 4) return new Color(106f/255f, 66f/255f, 22f/255f);
+        if (colorCode == 5) return new Color(96f/255f, 138f/255f, 142f/255f);
+        if (colorCode == 6) return new Color(241f/255f, 178f/255f, 233f/255f);
+        if (colorCode == 7) return new Color(231f/255f, 248f/255f, 158f/255f);
         return Color.white;
     }
 }

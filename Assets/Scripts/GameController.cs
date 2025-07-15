@@ -9,6 +9,9 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameDrawer _gameDrawer;
 
     [SerializeField] private RankHandler _rankHandler;
+
+    [SerializeField] private GameObject _ruleOn;
+    [SerializeField] private GameObject _ruleOff;
     
 
     private InGameState _gameState;
@@ -52,6 +55,8 @@ public class GameController : MonoBehaviour
         _updatedTimeLeft = TimeSpan.FromSeconds(data.gameTimeLimit);
         _updateTime = _currentTime;
 
+        _gameDrawer.UpdateGameRuleData(data);
+
         _gameState = InGameState.Playing;
 
         _players = new GamePlayer[_totalPlayerCount];
@@ -67,6 +72,8 @@ public class GameController : MonoBehaviour
 
         //StartCoroutine(CO_ShowRandomCard());
     }
+
+    
 
     public void OnResponseReadyGame(bool isSuccess, ResponsePacketData.ReadyGame data)
     {
@@ -121,7 +128,7 @@ public class GameController : MonoBehaviour
     public void OnResponseEndGame(bool isSuccess, ResponsePacketData.EndGame data)
     {
         _gameState = InGameState.Ended;
-        _rankHandler.UpdateRank(_players, data);
+        _rankHandler.UpdateRank(_players, data, _myPlayerIndex);
         SoundManager.Instance.PlaySfxEndGame(0f);
 
         if (data.playerRanks[_myPlayerIndex] == 1)
@@ -136,6 +143,18 @@ public class GameController : MonoBehaviour
     {
         SoundManager.Instance.PlaySfxButtonClick(0f);
         SceneManager.LoadScene("OutGameScene");
+    }
+
+    public void OnClickRuleOn()
+    {
+        _ruleOn.SetActive(true);
+        _ruleOff.SetActive(false);
+    }
+
+    public void OnClickRuleOff()
+    {
+        _ruleOn.SetActive(false);
+        _ruleOff.SetActive(true);
     }
 
     private GamePlayer GetPlayer(int index)
@@ -188,6 +207,29 @@ public class GameController : MonoBehaviour
         {
             OnClickBell();
         }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            OnClickEmotion(0);
+        }
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            OnClickEmotion(1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            OnClickEmotion(2);
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            OnClickEmotion(3);
+        }
+        
+
+
     }
 
     public void OnClickBell()

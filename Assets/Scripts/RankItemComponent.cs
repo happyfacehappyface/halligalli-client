@@ -10,8 +10,9 @@ public class RankItemComponent : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _playerNameText;
     [SerializeField] private Image _crownImage;
     [SerializeField] private Image _portraitImage;
+    [SerializeField] private GameObject _myLabel;
 
-    public void UpdateRankItem(int rank, string playerName, int cardCount, int colorIndex)
+    public void UpdateRankItem(int rank, string playerName, int cardCount, int colorIndex, bool isMe)
     {
         _playerNameText.text = playerName;
         _cardCountText.text = cardCount.ToString();
@@ -32,5 +33,7 @@ public class RankItemComponent : MonoBehaviour
         
 
         _portraitImage.color = AssetHolder.Instance.GetCharacterColor(colorIndex);
+
+        _myLabel.SetActive(isMe);
     }
 }

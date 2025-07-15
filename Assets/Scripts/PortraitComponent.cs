@@ -15,10 +15,13 @@ public class PortraitComponent : MonoBehaviour
     [SerializeField] private Animator _emotionBubbleAnimator;
     [SerializeField] private Transform _emotionBubbleRootTransform;
     [SerializeField] private Transform _emotionBubbleTransform;
+
+    [SerializeField] private Transform _emotionBubbleIconTransform;
     [SerializeField] private Image _catImage;
+    [SerializeField] private GameObject _myLabel;
     private GamePlayer _player;
 
-    public void ManualStart(GamePlayer player)
+    public void ManualStart(GamePlayer player, bool isMe)
     {
         _player = player;
 
@@ -27,6 +30,7 @@ public class PortraitComponent : MonoBehaviour
 
         _catImage.color = AssetHolder.Instance.GetCharacterColor(_player.ColorCode);
 
+        _myLabel.SetActive(isMe);
     }
     
     public void AdjustAngle(float angle)
@@ -37,6 +41,7 @@ public class PortraitComponent : MonoBehaviour
         {
             _emotionBubbleTransform.localRotation = Quaternion.Euler(0f, 0f, 180f);
             _emotionBubbleRootTransform.localPosition = new Vector3(-100f, -100f, 0f);
+            _emotionBubbleIconTransform.localPosition = new Vector3(0f, -7f, 0f);
         }
     }
 

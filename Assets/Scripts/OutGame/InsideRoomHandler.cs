@@ -9,7 +9,10 @@ public class InsideRoomHandler : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _roomNameText;
     [SerializeField] private TextMeshProUGUI _roomPlayerCountText;
 
-    [SerializeField] private Button _startGameButton;
+    [SerializeField] private TextMeshProUGUI _fruitVariationText;
+    [SerializeField] private TextMeshProUGUI _fruitCountText;
+    [SerializeField] private TextMeshProUGUI _gameTempoText;
+
 
     private OutGameController _controller;
     private int _maxPlayerCount;
@@ -19,10 +22,13 @@ public class InsideRoomHandler : MonoBehaviour
         _controller = controller;
     }
 
-    public void OnEnterRoom(string roomName, int maxPlayerCount)
+    public void OnEnterRoom(ResponsePacketData.EnterRoom data)
     {
-        _roomNameText.text = roomName;
-        _maxPlayerCount = maxPlayerCount;
+        _roomNameText.text = data.roomName;
+        _maxPlayerCount = data.maxPlayers;
+        _fruitVariationText.text = Utils.GetFruitVariationDescription(data.fruitVariation);
+        _fruitCountText.text = Utils.GetFruitCountDescription(data.fruitBellCount);
+        _gameTempoText.text = Utils.GetGameTempoDescription(data.gameTempo);
     }
 
 
