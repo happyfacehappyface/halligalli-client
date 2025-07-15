@@ -575,7 +575,7 @@ public record ResponsePacket(int signal, ResponsePacketData data);
 public abstract record RequestPacketData
 {
     public sealed record Ping() : RequestPacketData;
-    public sealed record EnterRoom() : RequestPacketData;
+    public sealed record EnterRoom(string userID) : RequestPacketData;
     public sealed record LeaveRoom() : RequestPacketData;
     public sealed record ReadyGame() : RequestPacketData;
 
@@ -695,3 +695,4 @@ public sealed record CastlingInfo(bool king, bool queen);
 
 */
 
+public sealed record RoomInfo(int roomID, string roomName, int playerCount, int maxPlayerCount, int fruitVariation, int fruitCount, int speed);

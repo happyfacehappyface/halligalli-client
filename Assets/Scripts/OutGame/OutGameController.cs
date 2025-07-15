@@ -9,14 +9,18 @@ using UnityEngine.Events;
 public class OutGameController : MonoBehaviour
 {
 
-    [SerializeField] private GameObject _waitGamePopup;
+    [SerializeField] private Animator _canvasAnimator;
+
     [SerializeField] private GameObject _waitForServer;
 
 
     [SerializeField] private GameObject _touchBlocker;
     [SerializeField] private GameObject _popupError;
     [SerializeField] private GameObject _popUpAccount;
+    [SerializeField] private GameObject _popUpCreateRoom;
     [SerializeField] private AccountPopupHandler _accountPopupHandler;
+    [SerializeField] private RoomListHandler _roomListHandler;
+    [SerializeField] private CreateRoomPanelHandler _createRoomPanelHandler;
 
     [SerializeField] private TextMeshProUGUI _popUpErrorTitle;
     [SerializeField] private TextMeshProUGUI _popUpErrorDescription;
@@ -32,22 +36,34 @@ public class OutGameController : MonoBehaviour
 
     private void ManualStart()
     {
-        _accountNameText.text = AccountManager.Instance.AccountName();
+        OnAccountNameChanged();
         _accountPopupHandler.ManualStart(this);
+        _roomListHandler.ManualStart(this);
+        _createRoomPanelHandler.ManualStart(this);
+
+        _canvasAnimator.SetTrigger("ToTitle");
     }
 
     public void OnClickEnterRoom()
     {
         SoundManager.Instance.PlaySfxButtonClick(0f);
-        NetworkManager.Instance.SendMessageToServer(new RequestPacketData.EnterRoom());
-        _waitForServer.SetActive(true);
+
+        _canvasAnimator.SetTrigger("ToRoomList");
+
+        //NetworkManager.Instance.SendMessageToServer(new RequestPacketData.EnterRoom(AccountManager.Instance.AccountID()));
+        //_waitForServer.SetActive(true);
+    }
+
+    public void OnClickJoinRoom(int roomID)
+    {
+        // TODO: Send Packet to Server
     }
 
     public void OnResponseEnterRoom(bool isSuccess, ResponsePacketData.EnterRoom data)
     {
         if (isSuccess)
         {
-            _waitGamePopup.SetActive(true);
+            //_waitGamePopup.SetActive(true);
         }
         else
         {
@@ -70,7 +86,7 @@ public class OutGameController : MonoBehaviour
     {
         if (isSuccess)
         {
-            _waitGamePopup.SetActive(false);
+            //_waitGamePopup.SetActive(false);
             _waitForServer.SetActive(false);
         }
         else
@@ -107,6 +123,7 @@ public class OutGameController : MonoBehaviour
         _popupError.SetActive(false);
         _touchBlocker.SetActive(false);
         _popUpAccount.SetActive(false);
+        _popUpCreateRoom.SetActive(false);
     }
 
     public void OpenPopupError(string title, string description)
@@ -126,10 +143,24 @@ public class OutGameController : MonoBehaviour
         _accountPopupHandler.OnOpenAccountPopup();
     }
 
+    private void OpenPopupCreateRoom()
+    {
+        ClosePopups();
+        _popUpCreateRoom.SetActive(true);
+        _touchBlocker.SetActive(true);
+        _createRoomPanelHandler.OnOpen();
+    }
+
     public void OnClickOpenAccountPopup()
     {
-        OpenPopupAccount();
         SoundManager.Instance.PlaySfxButtonClick(0f);
+        OpenPopupAccount();
+    }
+
+    public void OnClickOpenCreateRoomPopup()
+    {
+        SoundManager.Instance.PlaySfxButtonClick(0f);
+        OpenPopupCreateRoom();
     }
 
     public void OnAccountNameChanged()
@@ -170,7 +201,13 @@ public class OutGameController : MonoBehaviour
         else
         {
             AccountManager.Instance.OnLogIn(data.id, data.nickname);
+            OnAccountNameChanged();
         }
+    }
+
+    public void UpdateRoomList(List<RoomInfo> roomInfos)
+    {
+        _roomListHandler.UpdateRoomList(roomInfos);
     }
 
 
