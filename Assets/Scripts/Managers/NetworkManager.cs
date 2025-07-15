@@ -169,6 +169,27 @@ public class NetworkManager : MonoBehaviour
             }
         },
         {
+            typeof(ResponsePacketData.GetRoomList),
+            (isSuccess, data) => {
+                Utils.Log("GetRoomList");
+                FindObjectOfType<OutGameController>()?.OnResponseGetRoomList(isSuccess, (ResponsePacketData.GetRoomList)data);
+            }
+        },
+        {
+            typeof(ResponsePacketData.CreateRoom),
+            (isSuccess, data) => {
+                Utils.Log("CreateRoom");
+                FindObjectOfType<OutGameController>()?.OnResponseCreateRoom(isSuccess, (ResponsePacketData.CreateRoom)data);
+            }
+        },
+        {
+            typeof(ResponsePacketData.PlayerCountChanged),
+            (isSuccess, data) => {
+                Utils.Log("PlayerCountChanged");
+                FindObjectOfType<OutGameController>()?.OnResponsePlayerCountChanged(isSuccess, (ResponsePacketData.PlayerCountChanged)data);
+            }
+        },
+        {
             typeof(ResponsePacketData.StartGame),
             (isSuccess, data) => {
                 Utils.Log("StartGame");
@@ -236,6 +257,7 @@ public class NetworkManager : MonoBehaviour
                 FindObjectOfType<OutGameController>()?.OnResponseLogin(isSuccess, (ResponsePacketData.Login)data);
             }
         },
+
 
         /*
         {
@@ -369,6 +391,8 @@ public class NetworkManager : MonoBehaviour
         { 1, typeof(RequestPacketData.Ping) },
         { 1001, typeof(RequestPacketData.EnterRoom) },
         { 1002, typeof(RequestPacketData.LeaveRoom) },
+        { 1003, typeof(RequestPacketData.GetRoomList) },
+        { 1004, typeof(RequestPacketData.CreateRoom) },
         { 1011, typeof(RequestPacketData.ReadyGame) },
         { 2001, typeof(RequestPacketData.RingBell) },
         { 2004, typeof(RequestPacketData.Emotion) },
@@ -411,6 +435,9 @@ public class NetworkManager : MonoBehaviour
         { 1, typeof(ResponsePacketData.Pong) },
         { 1001, typeof(ResponsePacketData.EnterRoom) },
         { 1002, typeof(ResponsePacketData.LeaveRoom) },
+        { 1003, typeof(ResponsePacketData.GetRoomList) },
+        { 1004, typeof(ResponsePacketData.CreateRoom) },
+        { 1005, typeof(ResponsePacketData.PlayerCountChanged) },
         { 1010, typeof(ResponsePacketData.StartGame) },
         { 1011, typeof(ResponsePacketData.ReadyGame) },
         { 2000, typeof(ResponsePacketData.OpenCard) },
@@ -575,9 +602,13 @@ public record ResponsePacket(int signal, ResponsePacketData data);
 public abstract record RequestPacketData
 {
     public sealed record Ping() : RequestPacketData;
-    public sealed record EnterRoom(string userID) : RequestPacketData;
+    public sealed record EnterRoom(int roomId) : RequestPacketData;
     public sealed record LeaveRoom() : RequestPacketData;
+    public sealed record GetRoomList() : RequestPacketData;
+    public sealed record CreateRoom(string roomName, int maxPlayerCount, int fruitVariation, int fruitCount, int speed) : RequestPacketData;
     public sealed record ReadyGame() : RequestPacketData;
+
+    
 
     public sealed record RingBell() : RequestPacketData;
 
@@ -593,8 +624,13 @@ public abstract record ResponsePacketData
 {
     public sealed record Error(int code) : ResponsePacketData;
     public sealed record Pong() : ResponsePacketData;
-    public sealed record EnterRoom() : ResponsePacketData;
+    public sealed record EnterRoom(int roomId, string roomName, int maxPlayers, int fruitVariation, int fruitBellCount, int gameTempo) : ResponsePacketData;
     public sealed record LeaveRoom() : ResponsePacketData;
+    public sealed record CreateRoom(int roomID) : ResponsePacketData;
+
+    public sealed record GetRoomList(RoomInfo[] rooms) : ResponsePacketData;
+    public sealed record PlayerCountChanged(int playerCount) : ResponsePacketData;
+    
     
     public sealed record StartGame(int playerCount, string[] playerNames, int myIndex, int startingCards, int gameTimeLimit) : ResponsePacketData;
     public sealed record ReadyGame() : ResponsePacketData;

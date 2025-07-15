@@ -21,6 +21,7 @@ public class OutGameController : MonoBehaviour
     [SerializeField] private AccountPopupHandler _accountPopupHandler;
     [SerializeField] private RoomListHandler _roomListHandler;
     [SerializeField] private CreateRoomPanelHandler _createRoomPanelHandler;
+    [SerializeField] private InsideRoomHandler _insideRoomHandler;
 
     [SerializeField] private TextMeshProUGUI _popUpErrorTitle;
     [SerializeField] private TextMeshProUGUI _popUpErrorDescription;
@@ -40,30 +41,31 @@ public class OutGameController : MonoBehaviour
         _accountPopupHandler.ManualStart(this);
         _roomListHandler.ManualStart(this);
         _createRoomPanelHandler.ManualStart(this);
+        _insideRoomHandler.ManualStart(this);
 
         _canvasAnimator.SetTrigger("ToTitle");
     }
 
-    public void OnClickEnterRoom()
+    public void OnClickStartGame()
     {
         SoundManager.Instance.PlaySfxButtonClick(0f);
-
         _canvasAnimator.SetTrigger("ToRoomList");
-
-        //NetworkManager.Instance.SendMessageToServer(new RequestPacketData.EnterRoom(AccountManager.Instance.AccountID()));
-        //_waitForServer.SetActive(true);
+        RequestGetRoomList();
     }
 
-    public void OnClickJoinRoom(int roomID)
+    public void OnClickEnterRoom(int roomID)
     {
-        // TODO: Send Packet to Server
+        SoundManager.Instance.PlaySfxButtonClick(0f);
+        NetworkManager.Instance.SendMessageToServer(new RequestPacketData.EnterRoom(roomID));
+        _waitForServer.SetActive(true);
     }
 
     public void OnResponseEnterRoom(bool isSuccess, ResponsePacketData.EnterRoom data)
     {
         if (isSuccess)
         {
-            //_waitGamePopup.SetActive(true);
+            _insideRoomHandler.OnEnterRoom(data.roomName, data.maxPlayers);
+            _canvasAnimator.SetTrigger("ToInRoom");
         }
         else
         {
@@ -76,7 +78,6 @@ public class OutGameController : MonoBehaviour
 
     public void OnClickLeaveRoom()
     {
-        // TODO: Send Packet to Server
         SoundManager.Instance.PlaySfxButtonClick(0f);
         NetworkManager.Instance.SendMessageToServer(new RequestPacketData.LeaveRoom());
         _waitForServer.SetActive(true);
@@ -86,12 +87,59 @@ public class OutGameController : MonoBehaviour
     {
         if (isSuccess)
         {
-            //_waitGamePopup.SetActive(false);
-            _waitForServer.SetActive(false);
+            _canvasAnimator.SetTrigger("ToRoomList");
+            RequestGetRoomList();
         }
         else
         {
             OpenPopupError("문제 발생!", "방을 나갈 수 없습니다. 다시 시도해주세요");
+        }
+
+        _waitForServer.SetActive(false);
+    }
+
+    public void RequestGetRoomList()
+    {
+        NetworkManager.Instance.SendMessageToServer(new RequestPacketData.GetRoomList());
+        _waitForServer.SetActive(true);
+    }
+
+    public void RequestCreateRoom(string roomName, int maxPlayerCount, int fruitVariation, int fruitCount, int speed)
+    {
+        NetworkManager.Instance.SendMessageToServer(new RequestPacketData.CreateRoom(roomName, maxPlayerCount, fruitVariation, fruitCount, speed));
+        ClosePopups();
+        _waitForServer.SetActive(true);
+    }
+
+    
+
+    public void OnResponseGetRoomList(bool isSuccess, ResponsePacketData.GetRoomList data)
+    {
+        if (isSuccess)
+        {
+            UpdateRoomList(data.rooms);
+        }
+        _waitForServer.SetActive(false);
+    }
+
+    public void OnResponseCreateRoom(bool isSuccess, ResponsePacketData.CreateRoom data)
+    {
+        if (isSuccess)
+        {
+            return;
+        }
+        else
+        {
+            OpenPopupError("문제 발생!", "방을 생성할 수 없습니다. 다시 시도해주세요");
+        }
+        _waitForServer.SetActive(false);
+    }
+
+    public void OnResponsePlayerCountChanged(bool isSuccess, ResponsePacketData.PlayerCountChanged data)
+    {
+        if (isSuccess)
+        {
+            _insideRoomHandler.OnRoomPlayerCountChanged(data.playerCount);
         }
     }
 
@@ -117,6 +165,8 @@ public class OutGameController : MonoBehaviour
         SoundManager.Instance.PlaySfxButtonClick(0f);
         ClosePopups();
     }
+
+    
 
     public void ClosePopups()
     {
@@ -205,7 +255,7 @@ public class OutGameController : MonoBehaviour
         }
     }
 
-    public void UpdateRoomList(List<RoomInfo> roomInfos)
+    public void UpdateRoomList(RoomInfo[] roomInfos)
     {
         _roomListHandler.UpdateRoomList(roomInfos);
     }

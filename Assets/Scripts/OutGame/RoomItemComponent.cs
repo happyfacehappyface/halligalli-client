@@ -60,6 +60,6 @@ public class RoomItemComponent : MonoBehaviour
 
     private void OnClickJoinRoom()
     {
-        _controller.OnClickJoinRoom(_roomID);
+        _controller.OnClickEnterRoom(_roomID);
     }
 }

@@ -68,13 +68,12 @@ public class CreateRoomPanelHandler : MonoBehaviour
     {
         SoundManager.Instance.PlaySfxButtonClick(0f);
 
-        if ((_roomNameInputField.text.Length <= 0) || (_roomNameInputField.text.Length > 10))
+        if ((_roomNameInputField.text.Length <= 0) || (_roomNameInputField.text.Length > 14))
         {
             return;
         }
 
-        // TODO
-        //_controller.OnClickCreateRoom(_roomNameInputField.text, _roomMaxPlayerCount, _roomFruitVariation, _roomFruitCount, _roomSpeed);
+        _controller.RequestCreateRoom(_roomNameInputField.text, _roomMaxPlayerCount, _roomFruitVariation, _roomFruitCount, _roomSpeed);
     }
 
     public void OnClickClose()
@@ -85,7 +84,7 @@ public class CreateRoomPanelHandler : MonoBehaviour
 
     private void OnChangeRoomMaxPlayerCount(int delta)
     {
-        _roomMaxPlayerCount = Math.Clamp(_roomMaxPlayerCount + delta, 3, 8);
+        _roomMaxPlayerCount = Math.Clamp(_roomMaxPlayerCount + delta, 2, 8);
         UpdateRoomSettingText();
     }
 

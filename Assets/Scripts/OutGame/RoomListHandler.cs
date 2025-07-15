@@ -22,7 +22,7 @@ public class RoomListHandler : MonoBehaviour
         }
     }
 
-    public void UpdateRoomList(List<RoomInfo> roomInfos)
+    public void UpdateRoomList(RoomInfo[] roomInfos)
     {
         ClearRoomList();
 
@@ -31,6 +31,13 @@ public class RoomListHandler : MonoBehaviour
             GameObject roomItem = Instantiate(_roomItemPrefab, _roomItemParent);
             roomItem.GetComponent<RoomItemComponent>().UpdateRoomItem(_controller, roomInfo);
         }
+    }
+
+
+    public void OnClickRefreshRoomList()
+    {
+        SoundManager.Instance.PlaySfxButtonClick(0f);
+        _controller.RequestGetRoomList();
     }
 
 }
