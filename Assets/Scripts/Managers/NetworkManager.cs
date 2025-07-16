@@ -241,7 +241,13 @@ public class NetworkManager : MonoBehaviour
                 FindObjectOfType<GameController>()?.OnResponseEmotion(isSuccess, (ResponsePacketData.Emotion)data);
             }
         },
-
+        {
+            typeof(ResponsePacketData.HowSlow),
+            (isSuccess, data) => {
+                Utils.Log("HowSlow");
+                FindObjectOfType<GameController>()?.OnResponseHowSlow(isSuccess, (ResponsePacketData.HowSlow)data);
+            }
+        },
         {
             typeof(ResponsePacketData.CreateAccount),
             (isSuccess, data) => {
@@ -444,6 +450,7 @@ public class NetworkManager : MonoBehaviour
         { 2002, typeof(ResponsePacketData.RingBellCorrect) },
         { 2003, typeof(ResponsePacketData.RingBellWrong) },
         { 2004, typeof(ResponsePacketData.Emotion) },
+        { 2005, typeof(ResponsePacketData.HowSlow) },
         { 3000, typeof(ResponsePacketData.EndGame) },
 
         { 4000, typeof(ResponsePacketData.CreateAccount) },
@@ -639,6 +646,7 @@ public abstract record ResponsePacketData
     public sealed record RingBellWrong(int playerIndex, bool[] cardGivenTo, int[] playerCards) : ResponsePacketData;
 
     public sealed record Emotion(int playerIndex, int emotionType) : ResponsePacketData;
+    public sealed record HowSlow(int delayMs) : ResponsePacketData;
 
     public sealed record EndGame(int[] playerCards, int[] playerRanks) : ResponsePacketData;
 

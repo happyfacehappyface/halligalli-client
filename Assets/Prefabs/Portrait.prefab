@@ -280,6 +280,7 @@ MonoBehaviour:
   _emotionBubbleAnimator: {fileID: 848718283107737815}
   _emotionBubbleRootTransform: {fileID: 1380547495611359421}
   _emotionBubbleTransform: {fileID: 5200716825962271269}
+  _emotionBubbleIconTransform: {fileID: 1417978838752196412}
   _catImage: {fileID: 2203448753206602666}
   _myLabel: {fileID: 2860135391825885010}
 --- !u!1 &2726880199210136001

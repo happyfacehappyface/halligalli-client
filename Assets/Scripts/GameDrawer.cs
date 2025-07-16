@@ -26,9 +26,17 @@ public class GameDrawer : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI _timeText;
 
+    [SerializeField] private TextMeshProUGUI _openCardText;
+
     [SerializeField] private TextMeshProUGUI _fruitVariationText;
     [SerializeField] private TextMeshProUGUI _fruitCountText;
     [SerializeField] private TextMeshProUGUI _gameTempoText;
+
+
+    [SerializeField] private TextMeshProUGUI _slowText;
+    [SerializeField] private Animator _slowAnimator;
+
+    private TimeSpan _lastSlowInfoTime;
 
     private PlayerComponent[] _playerComponents;
     private PortraitComponent[] _portraitComponents;
@@ -38,6 +46,7 @@ public class GameDrawer : MonoBehaviour
         _controller = controller;
         _animationHandler.ManualStart(this);
         _effectHandler.ManualStart(this);
+        _lastSlowInfoTime = TimeSpan.FromSeconds(-10);
     }
 
     public void ManualUpdate()
@@ -72,10 +81,20 @@ public class GameDrawer : MonoBehaviour
         AdjustPlayerAngle();
     }
 
+    public void OnHowSlow(int delayMs)
+    {
+        _slowText.text = $"{(delayMs * 0.001f):F3}초 느렸습니다!";
+        _slowAnimator.SetTrigger("Open");
+    }
+
     public void OnPlayerUpdated(int playerIndex)
     {
         _playerComponents[playerIndex].UpdatePlayer();
         _portraitComponents[playerIndex].UpdateCardLeft();
+
+        int openCardCount = _controller.GetOpenCardCount();
+
+        _openCardText.text = openCardCount.ToString();
     }
 
     public void OnPlayersUpdated()
@@ -85,6 +104,8 @@ public class GameDrawer : MonoBehaviour
             _playerComponents[i].UpdatePlayer();
             _portraitComponents[i].UpdateCardLeft();
         }
+        int openCardCount = _controller.GetOpenCardCount();
+        _openCardText.text = openCardCount.ToString();
     }
 
     public void UpdateGameRuleData(ResponsePacketData.StartGame data)
@@ -111,6 +132,9 @@ public class GameDrawer : MonoBehaviour
     {
         _playerComponents[playerIndex].UpdateWithFlipCard();
         _portraitComponents[playerIndex].UpdateCardLeft();
+
+        int openCardCount = _controller.GetOpenCardCount();
+        _openCardText.text = openCardCount.ToString();
     }
 
     private void AdjustPlayerAngle()

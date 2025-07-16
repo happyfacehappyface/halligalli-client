@@ -73,6 +73,16 @@ public class GameController : MonoBehaviour
         //StartCoroutine(CO_ShowRandomCard());
     }
 
+    public int GetOpenCardCount()
+    {
+        int count = 0;
+        foreach (var player in _players)
+        {
+            count += player.ShowCardCount;
+        }
+        return count;
+    }
+
     
 
     public void OnResponseReadyGame(bool isSuccess, ResponsePacketData.ReadyGame data)
@@ -270,6 +280,11 @@ public class GameController : MonoBehaviour
     public void OnResponseEmotion(bool isSuccess, ResponsePacketData.Emotion data)
     {
         _gameDrawer.OnEmotion(data.playerIndex, data.emotionType);
+    }
+
+    public void OnResponseHowSlow(bool isSuccess, ResponsePacketData.HowSlow data)
+    {
+        _gameDrawer.OnHowSlow(data.delayMs);
     }
 
 
